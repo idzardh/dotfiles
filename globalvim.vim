@@ -95,9 +95,9 @@ autocmd FileType nerdtree setlocal relativenumber
 let g:gitgutter_map_keys = 0
 " }}}
 
-" syntastic settings {{{
-let g:syntastic_cpp_compiler = 'g++'
-let g:syntastic_cpp_compiler_options = '-std=c++17 -Wall -Wextra -Wunused'
+" syntastic settings {{{ (not necessary with youcompleteme)
+" let g:syntastic_cpp_compiler = 'g++'
+" let g:syntastic_cpp_compiler_options = '-std=c++17 -Wall -Wextra -Wunused'
 " }}}
 
 "}}}
@@ -175,9 +175,6 @@ nnoremap N Nzzzv
 nnoremap g; g;zz
 nnoremap g, g,zz
 
-" enable enter keys in normal mode
-" nnoremap <cr> o<esc>k
-
 " simple reformating of a paragraph (e.g. in latex)
 nnoremap Q gqip
 
@@ -227,13 +224,11 @@ inoremap <c-l> <c-x><c-l>
 nnoremap <C-n> :call NumberToggle()<cr>
 " make new enter appear beneath the current one in edit mode
 inoremap <c-cr> <c-o>o
-
 " }}}
 
 " 8. Ex Mappings {{{
 " enable sudo write if forgotten
 cnoremap w!! w !sudo tee > /dev/null %
-
 "}}}
 
 " 9. Leader Commands {{{
@@ -300,16 +295,7 @@ nnoremap <leader>su :mksession! ~/.vim/sesions/
 nnoremap <leader>sl :source ~/.vim/sessions/
 " toggle spell check
 nnoremap <leader>ss :setlocal spell!<cr>
-" TEMP include edit TA / end edit in checked files (single line)
-nnoremap <leader>ee O// edit TA<esc>jo//end edit<esc>
-" TEMP include SDL2
-nnoremap <leader>es fSiSDL2/<esc>
 " }}}
-
-" Leader plus function key {{{
-nnoremap <leader><F1> iFunny<esc>
-" }}}
-
 " }}}
 
 " 10. Line Settings {{{
