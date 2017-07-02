@@ -287,7 +287,7 @@ nnoremap <silent> <leader>r :QuickRun<cr>
 " Double character {{{
 " do not use: ' " a b fF h i j k l r t v wW z 0 1 2 3 4 5 6
 " edit vimrc
-nnoremap <silent> <leader>ev :vsplit $MYVIMRC<cr>
+nnoremap <silent> <leader>ev :vsplit ~/dotfiles/globalvim.vim<cr>
 nnoremap <silent> <leader>sv :source $MYVIMRC<cr>
 " edit bashrc
 nnoremap <silent> <leader>ez :vsplit ~/.zshrc<cr>
