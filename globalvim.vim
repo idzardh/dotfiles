@@ -22,6 +22,7 @@ Plugin 'vim-airline/vim-airline-themes'
 Plugin 'scrooloose/nerdtree'
 Plugin 'Xuyuanp/nerdtree-git-plugin'
 Plugin 'airblade/vim-gitgutter'
+Plugin 'tiagofumo/vim-nerdtree-syntax-highlight'
 
 " Ctags sidebar
 Plugin 'majutsushi/tagbar'
@@ -64,10 +65,13 @@ filetype plugin indent on
 " 3. Plugin Settings {{{
 " Airline settings {{{
 " let g:airline_theme='behelit'
-" let g:airline_theme='luna'
-let g:airline_theme='powerlineish'
+let g:airline_theme='luna'
+" let g:airline_theme='powerlineish'
 let g:airline#extensions#tabline#enabled = 1
 let g:airline_powerline_fonts = 1
+
+let g:WebDevIconsUnicodeDecorateFolderNodes = 1
+let g:DevIconsEnableFolderExtensionPatternMatching = 1
 
 set ttimeoutlen=10
 set laststatus=2
@@ -86,7 +90,7 @@ autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 
 let NERDTreeMinimalUI = 1
-let NERDTreeDirArrows = 1
+" let NERDTreeDirArrows = 1
 let NERDTreeShowLineNumbers=1
 autocmd FileType nerdtree setlocal relativenumber
 " }}}
@@ -180,6 +184,7 @@ nnoremap Q gqip
 
 " tab = 2 spaces
 " set expandtab     "turn tab into spaces
+
 set tabstop=2     "display tab as 2 spaces
 set shiftwidth=2  "insert two spaces for tab
 set softtabstop=2 "insert two spaces for tab
@@ -535,3 +540,6 @@ onoremap in{ :<c-u>normal! f{vi{<cr>
 " edit in prev ()
 onoremap inl{ :<c-u>normal! F}vi{<cr>
 " }}}
+
+autocmd FileType haskell set expandtab
+
