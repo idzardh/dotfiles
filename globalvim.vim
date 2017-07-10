@@ -3,9 +3,8 @@
 " only use <leader><space> in inoremap and no other leader commands!!
 
 " 1. Preamble {{{
-set nocompatible
 filetype off
-
+set nocompatible
 set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
 
@@ -21,6 +20,8 @@ Plugin 'vim-airline/vim-airline-themes'
 " File tree sidebar
 Plugin 'scrooloose/nerdtree'
 Plugin 'Xuyuanp/nerdtree-git-plugin'
+Plugin 'tiagofumo/vim-nerdtree-syntax-highlight'
+" git show additions compared to staged
 Plugin 'airblade/vim-gitgutter'
 Plugin 'tiagofumo/vim-nerdtree-syntax-highlight'
 
@@ -42,7 +43,8 @@ Plugin 'ctrlpvim/ctrlp.vim'
 " Syntax checking
 Plugin 'scrooloose/syntastic'
 " Cpp completion
-Plugin 'Valloric/YouCompleteMe'
+" Plugin 'Valloric/YouCompleteMe'
+source /usr/share/vim/vimfiles/plugin/youcompleteme.vim
 
 " Latex Preview
 Plugin 'xuhdev/vim-latex-live-preview'
@@ -66,7 +68,6 @@ filetype plugin indent on
 " Airline settings {{{
 " let g:airline_theme='behelit'
 let g:airline_theme='luna'
-" let g:airline_theme='powerlineish'
 let g:airline#extensions#tabline#enabled = 1
 let g:airline_powerline_fonts = 1
 
@@ -76,12 +77,6 @@ let g:DevIconsEnableFolderExtensionPatternMatching = 1
 set ttimeoutlen=10
 set laststatus=2
 set noshowmode
-
-" space config
-if !exists('g:airline_symbols')
-  let g:airline_symbols = {}
-endif
-let g:airline_symbols.space = "\ua0"
 " }}}
 
 " NERDTree settings {{{
@@ -90,18 +85,51 @@ autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 
 let NERDTreeMinimalUI = 1
-" let NERDTreeDirArrows = 1
+let NERDTreeDirArrows = 0
 let NERDTreeShowLineNumbers=1
 autocmd FileType nerdtree setlocal relativenumber
+
+" space config
+if !exists('g:airline_symbols')
+  let g:airline_symbols = {}
+endif
+let g:airline_symbols.space = "\ua0"
+
+let g:WebDevIconsUnicodeDecorateFolderNodes = 1
+let g:WebDevIconsEnableFoldersOpenClose = 1
+let g:DevIconsDefaultFolderOpenSymbol = ''
+let g:DevIconsEnableFolderExtensionPatternMatching = 1
+
+let g:WebDevIconsUnicodeDecorateFileNodesExtensionSymbols = {} " needed
+let g:WebDevIconsUnicodeDecorateFileNodesExtensionSymbols['tex'] = ''
+
+" color config
+let g:NERDTreeDisablePatternMatchHighlight = 0
+
+let g:NERDTreeFileExtensionHighlightFullName = 1
+let g:NERDTreeExactMatchHighlightFullName = 1
+let g:NERDTreePatternMatchHighlightFullName = 1
+
+let g:NERDTreeExtensionHighlightColor = {} " needed
+let g:NERDTreeExtensionHighlightColor['tex'] = '31B53E'
+
 " }}}
 
 " GitGutter settings {{{
 let g:gitgutter_map_keys = 0
 " }}}
 
-" syntastic settings {{{ (not necessary with youcompleteme)
-" let g:syntastic_cpp_compiler = 'g++'
-" let g:syntastic_cpp_compiler_options = '-std=c++17 -Wall -Wextra -Wunused'
+" syntastic settings {{{
+let g:syntastic_cpp_compiler = 'g++'
+let g:syntastic_cpp_compiler_options = '-std=c++17 -Wall -Wextra -Wunused'
+" }}}
+
+" youcompleteme {{{
+let g:ycm_python_binary_path    = '/usr/bin/python2'
+let g:ycm_server_python_interpreter = '/usr/bin/python2'
+let g:ycm_global_ycm_extra_conf = '/usr/share/vim/vimfiles/third_party/ycmd/cpp/ycm/.ycm_extra_conf.py'
+let g:ycm_confirm_extra_conf = 0
+let g:ycm_extra_conf_globlist = ['~/dev/*','!~/*']
 " }}}
 
 "}}}
@@ -165,8 +193,10 @@ colorscheme ron
 
 hi Normal ctermbg=NONE
 
+let g:tex_flavor = 'tex'
+
 set wildmenu
-set wildignore=*.o,*.obj,*.bak,*.exe,*.hi,*.dyn_hi,*.dyn_o,*.txt,*.zip
+set wildignore=*.o,*.obj,*.bak,*.exe,*.hi,*.dyn_hi,*.dyn_o,*.txt,*.zip,*.pdf
 " }}}
 
 " 5. Key remappings {{{
@@ -229,11 +259,13 @@ inoremap <c-l> <c-x><c-l>
 nnoremap <C-n> :call NumberToggle()<cr>
 " make new enter appear beneath the current one in edit mode
 inoremap <c-cr> <c-o>o
+
 " }}}
 
 " 8. Ex Mappings {{{
 " enable sudo write if forgotten
 cnoremap w!! w !sudo tee > /dev/null %
+
 "}}}
 
 " 9. Leader Commands {{{
@@ -292,6 +324,8 @@ nnoremap <silent> <leader>sv :source $MYVIMRC<cr>
 " edit bashrc
 nnoremap <silent> <leader>ez :vsplit ~/.zshrc<cr>
 nnoremap <silent> <leader>sz :! source ~/.zshrc<cr><cr>
+" TEMP: edit configuration package file
+nnoremap <silent> <leader>ep :vsplit ~/Documents/studie/master/afstudeeropdracht/report/include/settings.tex<cr>
 " make session
 nnoremap <leader>sm :mksession ~/.vim/sessions/
 " update session
@@ -418,7 +452,7 @@ autocmd FileType tex,plaintex inoremap ;ba bar[progress=00,progress label text={
 autocmd FileType tex,plaintex inoremap ;mi milestone{}{<++>}<++><esc>2F{a
 autocmd FileType tex,plaintex inoremap ;gl link{}{<++>}<cr><++><esc>k$2F{a
 " }}}
-" {{{ ros
+" {{{ TEMP ros
 autocmd FileType tex,plaintex inoremap ;ros \ac{ROS}
 " }}}
 " }}}
@@ -460,9 +494,9 @@ autocmd FileType h,cpp cnoremap ;v vector<
 autocmd FileType h,cpp inoremap ;a array<,<++>><space><++><esc>Faf<a
 autocmd FileType h,cpp cnoremap ;a array<
 " include standard header
-autocmd FileType h,cpp inoremap ;incs #include<space><><cr><++><esc>k0f<a
+autocmd FileType h,cpp inoremap ;incs #include<space><><++><esc>0f<a
 " include own header
-autocmd FileType h,cpp inoremap ;inc #include<space>""<cr><++><esc>k0f"a
+autocmd FileType h,cpp inoremap ;inc #include<space>""<++><esc>0f"a
 " include iostream
 autocmd FileType h,cpp inoremap ;iinc #include<space><iostream><cr>
 " make a private data member and automatically make getters and setters
@@ -515,6 +549,8 @@ endfunction
 " }}}
 " make ;const
 autocmd FileType h,cpp inoremap ;co const
+" make ;ros
+autocmd FileType h,cpp inoremap ;r ros::
 " }}}
 
 " 14. Macros {{{
