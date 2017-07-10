@@ -23,7 +23,6 @@ Plugin 'Xuyuanp/nerdtree-git-plugin'
 Plugin 'tiagofumo/vim-nerdtree-syntax-highlight'
 " git show additions compared to staged
 Plugin 'airblade/vim-gitgutter'
-Plugin 'tiagofumo/vim-nerdtree-syntax-highlight'
 
 " Ctags sidebar
 Plugin 'majutsushi/tagbar'
