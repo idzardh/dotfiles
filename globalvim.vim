@@ -576,5 +576,7 @@ onoremap in{ :<c-u>normal! f{vi{<cr>
 onoremap inl{ :<c-u>normal! F}vi{<cr>
 " }}}
 
+" {{{ 17. Haskell bindings
 autocmd FileType haskell set expandtab
 
+" }}}
