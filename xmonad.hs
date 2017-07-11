@@ -9,7 +9,7 @@ import XMonad.Util.Themes
 import XMonad.Actions.DynamicProjects
 import XMonad.Actions.DynamicWorkspaces
 import XMonad.Actions.SpawnOn
-import XMonad.Hooks.ManageDocks             ( avoidStruts, manageDocks, docksEventHook)
+import XMonad.Hooks.ManageDocks--             ( avoidStruts, manageDocks, docksEventHook, ToggleStruts)
 import XMonad.Hooks.DynamicLog
 
 import qualified Data.Map as M
@@ -37,10 +37,11 @@ main = do
         { ppOutput    = hPutStrLn xmproc
         , ppCurrent   = xmobarColor "#2c8fa0" "" . wrap "[" "]"
         , ppSep       = " | "
-        , ppLayout    = (\x -> case x of
-                            "SmartSpacing 5 Tall"       -> " <fn=1>\xf04c</fn> "
-                            "SmartSpacing 5 ThreeCol"   -> " <fn=1>\xe0cf</fn> "
-                            _             -> x
+        , ppLayout    = (\x -> case (last . words) x of
+                            "Tall"       -> " <fn=1>\xf04c</fn> "
+                            "ThreeCol"   -> " <fn=1>\xe0cf</fn> "
+                            "Full"       -> " <fn=1>\xf0c8</fn> "
+                            _            -> x
                         )
         , ppTitle     = xmobarColor "#2c8fa0" "" . shorten 50
         }
@@ -57,14 +58,17 @@ myModMask     = mod4Mask
 myBorderWidth = 2
 myLayout      = Tall 1 (3/100) (1/2)
 myBrowser     = "firefox"
+
 mySpacing :: Int
 mySpacing     = 5
+noSpacing :: Int
+noSpacing     = 0
 
 -----------------------------------------------------------------------------}}}
 -- Layouts                                                                   {{{
 --------------------------------------------------------------------------------
 
-myLayouts = smartSpacing mySpacing $ myLayout ||| ThreeColMid 1 (3/100) (1/2) ||| ThreeColMid 1 (3/100) (1/3)
+myLayouts = spacing mySpacing $ myLayout ||| ThreeColMid 1 (3/100) (1/2) ||| ThreeCol 1 (3/100) (1/3) ||| Full
 
 -----------------------------------------------------------------------------}}}
 -- Workspaces                                                                {{{
@@ -121,10 +125,18 @@ projects =
 -----------------------------------------------------------------------------}}}
 -- Keys                                                                      {{{
 --------------------------------------------------------------------------------
+
+--TODO: addName?
+--TODO: audo function keys
 myAdditionalKeys =
-  [ ("M-f"        , spawn myBrowser) --TODO addName?
+  [ ("M-z"        , spawn "~/dotfiles/scripts/lockscreen.sh")
   , ("M-s"        , spawn "steam")
   , ("M-S-s"      , spawn "systemctl suspend")
+  , ("M-b"        , sendMessage ToggleStruts)
+  , ("M-S-b"      , incSpacing mySpacing)
+  , ("M-v"        , setSpacing mySpacing)
+  , ("M-S-v"      , incSpacing (-mySpacing))
+  , ("M-f"        , spawn myBrowser)
   --, ("M-a"        , switchProjectPrompt)
   --, ("M-z"        , shiftToProjectPrompt)
   ]
