@@ -54,9 +54,6 @@ Plugin 'mileszs/ack.vim'
 " Comment plugin
 Plugin 'tpope/vim-commentary'
 
-" colors (solarized)
-Plugin 'altercation/vim-colors-solarized'
-
 " fancy icons
 Plugin 'ryanoasis/vim-devicons'
 
