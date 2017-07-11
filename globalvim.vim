@@ -54,6 +54,9 @@ Plugin 'mileszs/ack.vim'
 " Comment plugin
 Plugin 'tpope/vim-commentary'
 
+" colors (solarized)
+Plugin 'altercation/vim-colors-solarized'
+
 " fancy icons
 Plugin 'ryanoasis/vim-devicons'
 
@@ -87,6 +90,7 @@ let NERDTreeMinimalUI = 1
 let NERDTreeDirArrows = 0
 let NERDTreeShowLineNumbers=1
 autocmd FileType nerdtree setlocal relativenumber
+autocmd FileType nerdtree setlocal nolist
 
 " space config
 if !exists('g:airline_symbols')
@@ -101,6 +105,7 @@ let g:DevIconsEnableFolderExtensionPatternMatching = 1
 
 let g:WebDevIconsUnicodeDecorateFileNodesExtensionSymbols = {} " needed
 let g:WebDevIconsUnicodeDecorateFileNodesExtensionSymbols['tex'] = ''
+let g:WebDevIconsUnicodeDecorateFileNodesExtensionSymbols['pdf'] = ''
 
 " color config
 let g:NERDTreeDisablePatternMatchHighlight = 0
@@ -109,9 +114,12 @@ let g:NERDTreeFileExtensionHighlightFullName = 1
 let g:NERDTreeExactMatchHighlightFullName = 1
 let g:NERDTreePatternMatchHighlightFullName = 1
 
-let g:NERDTreeExtensionHighlightColor = {} " needed
-let g:NERDTreeExtensionHighlightColor['tex'] = '31B53E'
+let s:lightGreen = '31B53E'
+let s:darkOrange = 'F16529'
 
+let g:NERDTreeExtensionHighlightColor = {} " needed
+let g:NERDTreeExtensionHighlightColor['tex'] = s:lightGreen
+let g:NERDTreeExtensionHighlightColor['pdf'] = s:darkOrange
 " }}}
 
 " GitGutter settings {{{
@@ -187,7 +195,7 @@ set spelllang=en_gb
 "  au FileType h setlocal foldlevelstart=3
 "augroup END
 
-colorscheme ron
+colorscheme elflord
 "desert
 
 hi Normal ctermbg=NONE
