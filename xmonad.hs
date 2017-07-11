@@ -27,7 +27,7 @@ main = do
       , modMask            = myModMask
       , manageHook         = manageDocks <+> manageHook def
       , borderWidth        = myBorderWidth
-      , normalBorderColor  = "#000000"
+      , normalBorderColor  = "#111111"
       , focusedBorderColor = "#2c8fa0"
       , layoutHook         = avoidStruts $ smartBorders $ myLayouts
       --, layoutHook         = avoidStruts $ layoutHook def
@@ -140,6 +140,8 @@ myStartupHook = do
   spawn "feh --bg-fill ~/Pictures/awesome.jpg"
   spawn "xcompmgr -c"
   spawn "xmodmap -e 'clear Lock' -e 'keycode 0x42 = Escape'"
+
+-- dual monitor? --> xrandr --output <DP-1> --left-of <DP-2> (xrandr -q for the names of DP-1 and DP-2)
 
 {-{{{
 --myLayoutHook = showWorkspaceName -- TODO: find showWorkspaceName
