@@ -20,7 +20,7 @@ import qualified Data.Map as M
 
 main = do
   xmproc <- spawnPipe "xmobar ~/.xmonad/xmobar.hs"
-  xmonad 
+  xmonad
     -- $ dynamicProjects projects
     $ def
       { terminal           = myTerminal
@@ -127,7 +127,8 @@ projects =
 --------------------------------------------------------------------------------
 
 --TODO: addName?
---TODO: audo function keys
+--TODO: audio function keys
+--TODO: move some programs automatically to workspaces
 myAdditionalKeys =
   [ ("M-z"        , spawn "~/dotfiles/scripts/lockscreen.sh")
   , ("M-s"        , spawn "steam")
@@ -137,6 +138,9 @@ myAdditionalKeys =
   , ("M-v"        , setSpacing mySpacing)
   , ("M-S-v"      , incSpacing (-mySpacing))
   , ("M-f"        , spawn myBrowser)
+  -- control key binds
+  , ("C-S-="        , spawn "pactl set-sink-volume 1 +5%")
+  , ("C-S--"        , spawn "pactl set-sink-volume 1 -5%")
   --, ("M-a"        , switchProjectPrompt)
   --, ("M-z"        , shiftToProjectPrompt)
   ]

@@ -12,9 +12,11 @@ Config { -- font = "-misc-fixed-*-*-*-*-13-*-*-*-*-*-*-*"
                     , Run Memory ["-t","Mem: <usedratio>%"] 10
                     , Run Swap [] 10
                     , Run Date "%a %b %_d %Y %H:%M:%S" "date" 10
+                    , Run Com "/usr/bin/bash" ["-c", "~/dotfiles/scripts/volume.sh"] "vol" 10
+                    , Run Com "/usr/bin/zsh" ["-c", "~/dotfiles/scripts/todo.sh"] "todo" 10
                     , Run StdinReader
                     ]
        , sepChar = "%"
        , alignSep = "}{"
-       , template = "%StdinReader% }{ %cpu% | %memory% | %date%"
+       , template = "%StdinReader% }{ %cpu% | %memory% | %todo% | %vol% | %date%"
        }

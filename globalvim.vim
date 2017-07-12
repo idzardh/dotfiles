@@ -95,11 +95,7 @@ if !exists('g:airline_symbols')
 endif
 let g:airline_symbols.space = "\ua0"
 
-let g:WebDevIconsUnicodeDecorateFolderNodes = 1
-let g:WebDevIconsEnableFoldersOpenClose = 1
-let g:DevIconsDefaultFolderOpenSymbol = ''
-let g:DevIconsEnableFolderExtensionPatternMatching = 1
-
+let g:WebDevIconsUnicodeDecorateFolderNodes = 0
 let g:WebDevIconsUnicodeDecorateFileNodesExtensionSymbols = {} " needed
 let g:WebDevIconsUnicodeDecorateFileNodesExtensionSymbols['tex'] = ''
 let g:WebDevIconsUnicodeDecorateFileNodesExtensionSymbols['pdf'] = ''
@@ -411,7 +407,7 @@ autocmd FileType tex,plaintex inoremap ;lit \begin{itemize}<cr>\item<space><cr>\
 " ;len -> list with enumerate
 autocmd FileType tex,plaintex inoremap ;len \begin{enumerate}<cr>\item<space><cr>\end{enumerate}<cr><cr><++><esc>3kA
 " ;lt -> add item
-autocmd FileType tex,plaintex inoremap ;lt <cr>\item<space>
+autocmd FileType tex,plaintex inoremap ;lt \item<space>
 " }}}
 " {{{ Math
 " type ;eqn to automatically make an equation environment
@@ -427,7 +423,7 @@ autocmd FileType tex,plaintex inoremap ;fi \begin{figure}[hb]<cr>\centering<cr>\
 " type ;fsi to automatically make a standard subfigure environment
 autocmd FileType tex,plaintex inoremap ;fsi \begin{figure}[hb]<cr>\centering<cr>\subfloat[\label{fig:<++>}]{\includegraphics[width=0.45\columnwidth]{./img/<++>}}<cr>\qquad<cr>\subfloat[<++>\label{fig:<++>}]{\includegraphics[width=0.45\columnwidth]{./img/<++>}}<cr>\label{fig:<++>}<cr>\end{figure}<cr><cr><++><esc>6k0f[a
 " }}}
-" {{{ References
+" {{{ References TODO: make them into concatenations of (name)ref
 " type ;ref to automatically make a ref to a fig
 autocmd FileType tex,plaintex inoremap ;ref figure~\ref{fig:}<++><esc>F:a
 " type ;ree to automatically make a ref to an equation
@@ -456,13 +452,16 @@ autocmd FileType tex,plaintex inoremap ;ba bar[progress=00,progress label text={
 autocmd FileType tex,plaintex inoremap ;mi milestone{}{<++>}<++><esc>2F{a
 autocmd FileType tex,plaintex inoremap ;gl link{}{<++>}<cr><++><esc>k$2F{a
 " }}}
+" {{{ frame
+autocmd FileType tex,plaintex inoremap ;fr \begin{frame}<cr>\frametitle{}<cr>\end{frame}<esc>k0f{a
+" }}}
 " {{{ TEMP ros
 autocmd FileType tex,plaintex inoremap ;ros \ac{ROS}
 " }}}
 " }}}
 
 " 13. Cpp bindings {{{
-" find next <++> for custom Latex editing
+" find next <++> for custom cpp editing
 autocmd FileType h,cpp inoremap <leader><space> <esc>/<++><cr>"_c4l
 " make ;class class<space><cr>{<cr>public:<cr>private:<cr><++><cr>};<esc>5kA
 autocmd FileType h,cpp inoremap <silent> ;class <esc>:call MakeClass()<cr>i
