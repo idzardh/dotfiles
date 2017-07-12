@@ -152,10 +152,16 @@ myAdditionalKeys =
 -----------------------------------------------------------------------------}}}
 -- Startup Hook                                                              {{{
 --------------------------------------------------------------------------------
+--TODO: check for dual monitor at startup -> xrandr?
 myStartupHook = do
+  --spawn "xrandr --output eDP1 --left-of HDMI1"
   spawn "feh --bg-fill ~/Pictures/awesome.jpg"
   spawn "xcompmgr -c"
   spawn "xmodmap -e 'clear Lock' -e 'keycode 0x42 = Escape'"
+  -- trayer necessary!
+  spawn "trayer --edge top --align right --SetPartialStrut true --transparent true --alpha 030 --tint 0x000000 --expand false --heighttype pixel --height 19 --monitor 0 --padding 1 --widthtype percent --width 5"
+  spawn "dropbox"
+  spawn "nm-applet"
 
 -- dual monitor? --> xrandr --output <DP-1> --left-of <DP-2> (xrandr -q for the names of DP-1 and DP-2)
 
