@@ -130,7 +130,8 @@ projects =
 --TODO: audio function keys
 --TODO: move some programs automatically to workspaces
 myAdditionalKeys =
-  [ ("M-z"        , spawn "~/dotfiles/scripts/lockscreen.sh")
+  [ ("M-z"        , spawn "tilix -e vim -O ~/Dropbox/todo.txt/todo.txt ~/Dropbox/todo.txt/done.txt")
+  , ("M-S-z"      , spawn "~/dotfiles/scripts/lockscreen.sh")
   , ("M-s"        , spawn "steam")
   , ("M-S-s"      , spawn "systemctl suspend")
   , ("M-b"        , sendMessage ToggleStruts)
