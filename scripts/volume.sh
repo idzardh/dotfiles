@@ -13,8 +13,8 @@ function getdefaultsinkvol() {
 
 function addIcon()
 {
-  local s=$(getdefaultsinkvol)
-  if (( $s == 0 )); then
+	local s=$(getdefaultsinkvol)
+	if (( $s == 0 )); then
 		s="<fn=1></fn> $s"
 	elif (( $s > 40 )); then
 		s="<fn=1></fn> $s"
