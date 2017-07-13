@@ -9,8 +9,10 @@ import XMonad.Util.Themes
 import XMonad.Actions.DynamicProjects
 import XMonad.Actions.DynamicWorkspaces
 import XMonad.Actions.SpawnOn
-import XMonad.Hooks.ManageDocks--             ( avoidStruts, manageDocks, docksEventHook, ToggleStruts)
+import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.DynamicLog
+
+import qualified XMonad.StackSet as W
 
 import qualified Data.Map as M
 
@@ -25,12 +27,10 @@ main = do
     $ def
       { terminal           = myTerminal
       , modMask            = myModMask
-      , manageHook         = manageDocks <+> manageHook def
       , borderWidth        = myBorderWidth
       , normalBorderColor  = "#111111"
       , focusedBorderColor = "#2c8fa0"
       , layoutHook         = avoidStruts $ smartBorders $ myLayouts
-      --, layoutHook         = avoidStruts $ layoutHook def
       , handleEventHook    = handleEventHook def <+> docksEventHook
       , startupHook        = myStartupHook
       , logHook            = dynamicLogWithPP $ xmobarPP
@@ -46,6 +46,7 @@ main = do
         , ppTitle     = xmobarColor "#2c8fa0" "" . shorten 50
         }
       , workspaces         = myWorkspaces
+      , manageHook         = myManageHook <+> manageHook def
       }
       `additionalKeysP` myAdditionalKeys
 
@@ -149,6 +150,16 @@ myAdditionalKeys =
 -- managehook                                                                {{{
 --------------------------------------------------------------------------------
 
+myManageHook = composeAll
+  [ className =? "steam" --> doShift wsGAM
+  , className =? "Xmessage" --> doFloat
+  , className =? "nautilus" --> doShift wsWRK
+  , manageDocks
+  , (role =? "gimp-toolbox" <||> role =? "gimp-image-window") --> (ask >>= doF . W.sink)
+  ]
+  where
+    role = stringProperty "WM_WINDOW_ROLE"
+
 -----------------------------------------------------------------------------}}}
 -- Startup Hook                                                              {{{
 --------------------------------------------------------------------------------
@@ -161,7 +172,7 @@ myStartupHook = do
   -- trayer necessary!
   spawn "trayer --edge top --align right --SetPartialStrut true --transparent true --alpha 030 --tint 0x000000 --expand false --heighttype pixel --height 19 --monitor 0 --padding 1 --widthtype percent --width 5"
   spawn "dropbox"
-  spawn "nm-applet"
+  -- spawn "nm-applet"
 
 -- dual monitor? --> xrandr --output <DP-1> --left-of <DP-2> (xrandr -q for the names of DP-1 and DP-2)
 

@@ -2,7 +2,7 @@
 Config { font    = "xft:UbuntuMonoDerivativePowerline Nerd Font Regular:size=9"
        , additionalFonts = ["xft:UbuntuMonoDerivativePowerline Nerd Font:size=10"]
        , bgColor = "#000000" --"#392737"
-       , fgColor = "#586e75" --"grey"
+       , fgColor = "#2c8fa0" --"grey"
        , alpha   = 220
        , allDesktops = True
        , position = TopW L 95
