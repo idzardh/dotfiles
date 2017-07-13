@@ -8,25 +8,25 @@ Config { font    = "xft:UbuntuMonoDerivativePowerline Nerd Font Regular:size=9"
        , position = TopW L 95
        , commands = [
                       Run Cpu
-                        [ "-t", "<fn=1>\xf085</fn> cpu <vbar>"
-                        , "-L", "10"
+                        [ "-t", "<fn=1>\xf085</fn> <vbar>"
+                        , "-L", "2"
                         , "-H", "60"
                         , "-l", "#586e75"
                         , "-n", "green"
                         , "-h", "red"
                         ] 10
                     , Run Memory
-                        [ "-t", "<fn=1>\xe799</fn> mem <usedvbar>"
+                        [ "-t", "<fn=1>\xf473</fn> <usedvbar>"
                         , "-p", "2"
                         , "-l", "#586e75"
                         , "-h", "#268bd2"
                         ] 10
                     , Run Date "<fn=1>\xf073</fn> %a %b %_d %Y | %H:%M:%S" "date" 10
-                    , Run Com "/usr/bin/bash" ["-c", "~/dotfiles/scripts/volume.sh"] "vol" 10
+                    , Run Com "/usr/bin/zsh" ["-c", "~/dotfiles/scripts/volume.sh"] "vol" 10
                     , Run Com "/usr/bin/zsh" ["-c", "~/dotfiles/scripts/todo.sh"] "todo" 10
                     , Run StdinReader
                     ]
        , sepChar = "%"
        , alignSep = "}{"
-       , template = "%StdinReader% }{ %cpu% | %memory% | %todo% | %vol% | %date%"
+       , template = "%StdinReader% }{ %cpu% | %memory% | <fn=1></fn> %todo% | %vol% | %date%"
        }

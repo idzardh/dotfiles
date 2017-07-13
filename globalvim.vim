@@ -452,8 +452,9 @@ autocmd FileType tex,plaintex inoremap ;ba bar[progress=00,progress label text={
 autocmd FileType tex,plaintex inoremap ;mi milestone{}{<++>}<++><esc>2F{a
 autocmd FileType tex,plaintex inoremap ;gl link{}{<++>}<cr><++><esc>k$2F{a
 " }}}
-" {{{ frame
+" {{{ beamer
 autocmd FileType tex,plaintex inoremap ;fr \begin{frame}<cr>\frametitle{}<cr>\end{frame}<esc>k0f{a
+autocmd FileType tex,plaintex inoremap ;co \begin{column}{.5\textwidth}<cr><cr>\end{column}<esc>k0cc
 " }}}
 " {{{ TEMP ros
 autocmd FileType tex,plaintex inoremap ;ros \ac{ROS}

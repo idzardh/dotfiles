@@ -76,12 +76,12 @@ myLayouts = spacing mySpacing $ myLayout ||| ThreeColMid 1 (3/100) (1/2) ||| Thr
 --------------------------------------------------------------------------------
 
 -- fa icons!
-wsGEN = "1: <fn=1>\xf269</fn>"
-wsWRK = "2: <fn=1>\xf02d</fn>"
-wsSYS = "3: <fn=1>\xf300</fn>"
-wsMED = "4: <fn=1>\xf001</fn>"
-wsTMP = "5: <fn=1>\xf103</fn>"
-wsGAM = "6: <fn=1>\xf11b</fn>"
+wsGEN = "1: <fn=1>\xf269</fn> "
+wsWRK = "2: <fn=1>\xf02d</fn> "
+wsSYS = "3: <fn=1>\xf300</fn> "
+wsMED = "4: <fn=1>\xf001</fn> "
+wsTMP = "5: <fn=1>\xf103</fn> "
+wsGAM = "6: <fn=1>\xf11b</fn> "
 
 myWorkspaces :: [String]
 myWorkspaces = [wsGEN, wsWRK, wsSYS, wsMED, wsTMP, wsGAM]
@@ -131,7 +131,8 @@ projects =
 --TODO: audio function keys
 --TODO: move some programs automatically to workspaces
 myAdditionalKeys =
-  [ ("M-z"        , spawn "~/dotfiles/scripts/lockscreen.sh")
+  [ ("M-z"        , spawn "tilix -e vim -O ~/Dropbox/todo.txt/todo.txt ~/Dropbox/todo.txt/done.txt")
+  , ("M-S-z"      , spawn "~/dotfiles/scripts/lockscreen.sh")
   , ("M-s"        , spawn "steam")
   , ("M-S-s"      , spawn "systemctl suspend")
   , ("M-b"        , sendMessage ToggleStruts)
@@ -164,13 +165,13 @@ myManageHook = composeAll
 -- Startup Hook                                                              {{{
 --------------------------------------------------------------------------------
 --TODO: check for dual monitor at startup -> xrandr?
+--TODO: place trayer, dropbox and nm-applet into xinitrc? or maybe add to systemctl
 myStartupHook = do
   --spawn "xrandr --output eDP1 --left-of HDMI1"
-  spawn "feh --bg-fill ~/Pictures/awesome.jpg"
+  spawn "feh --bg-fill ~/Pictures/awesome3.jpg"
   spawn "xcompmgr -c"
   spawn "xmodmap -e 'clear Lock' -e 'keycode 0x42 = Escape'"
-  -- trayer necessary!
-  spawn "trayer --edge top --align right --SetPartialStrut true --transparent true --alpha 030 --tint 0x000000 --expand false --heighttype pixel --height 19 --monitor 0 --padding 1 --widthtype percent --width 5"
+  spawn "trayer --edge top --align right --SetPartialStrut true --transparent true --alpha 000 --tint 0x000000 --expand false --heighttype pixel --height 19 --monitor 0 --padding 1 --widthtype percent --width 5"
   spawn "dropbox"
   -- spawn "nm-applet"
 
