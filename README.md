@@ -13,6 +13,8 @@ zsh:
 * .zshrc : some basic stuff for configuring the command line to print some useful information, the other files are used as part of the git displaying in the command line
 
 globalvim.vim : my vim settings
+
 xmobar.hs : my xmobar configuration
-xmonad.hs : my xmonad configuration
+
+ xmonad.hs : my xmonad configuration
 
