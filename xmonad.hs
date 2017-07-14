@@ -183,7 +183,7 @@ projects =
 --TODO: move some programs automatically to workspaces
 --TODO: split keys in different functionality (system, media, launchers)
 myAdditionalKeys =
-  [ ("M-z"        , spawn "tilix -e vim -O ~/Dropbox/todo.txt/todo.txt ~/Dropbox/todo.txt/done.txt")
+  [ ("M-z"        , spawn "tilix -e vim -o ~/Dropbox/todo.txt/todo.txt ~/Dropbox/todo.txt/done.txt")
   , ("M-S-z"      , spawn "~/dotfiles/scripts/lockscreen.sh")
   , ("M-s"        , spawn "steam")
   , ("M-S-s"      , spawn "systemctl suspend")
