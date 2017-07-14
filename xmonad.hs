@@ -2,6 +2,7 @@ import XMonad                        hiding ( (|||) )
 import XMonad.Layout.Spacing
 import XMonad.Layout.LayoutCombinators
 import XMonad.Layout.ThreeColumns
+import XMonad.Layout.NoFrillsDecoration
 import XMonad.Layout.NoBorders              ( smartBorders )
 import XMonad.Util.EZConfig                 ( additionalKeysP )
 import XMonad.Util.Run                      ( runInTerm, spawnPipe, hPutStrLn )
@@ -68,7 +69,58 @@ noSpacing     = 0
 -- Layouts                                                                   {{{
 --------------------------------------------------------------------------------
 
+-- better specify layouts
 myLayouts = spacing mySpacing $ myLayout ||| ThreeColMid 1 (3/100) (1/2) ||| ThreeCol 1 (3/100) (1/3) ||| Full
+
+-- addTopBar = noFrillsDeco shrinkText topBarTheme
+
+-----------------------------------------------------------------------------}}}
+-- Themes & Colours                                                          {{{
+--------------------------------------------------------------------------------
+
+topBarTheme = def
+  { fontName              = myFont
+  , inactiveBorderColor   = base03
+  , inactiveColor         = base03
+  , inactiveTextColor     = base03
+  , activeBorderColor     = active
+  , activeColor           = active
+  , activeTextColor       = active
+  , urgentBorderColor     = red
+  , urgentTextColor       = yellow
+  , decoHeight            = topbar
+ }
+
+-- fonts
+myFont = "xft:UbuntuMonoDerivativePowerline Nerd Font Regular:size=9"
+
+-- sizes
+topbar    = 10
+
+-- colours for themes
+active       = blue
+activeWarn   = red
+inactive     = base02
+focusColor   = blue
+unfocusColor = base02
+
+-- colours (Thanks to Altercation!)
+base03  = "#002b36"
+base02  = "#073642"
+base01  = "#586e75"
+base00  = "#657b83"
+base0   = "#839496"
+base1   = "#93a1a1"
+base2   = "#eee8d5"
+base3   = "#fdf6e3"
+yellow  = "#b58900"
+orange  = "#cb4b16"
+red     = "#dc322f"
+magenta = "#d33682"
+violet  = "#6c71c4"
+blue    = "#268bd2"
+cyan    = "#2aa198"
+green   = "#859900"
 
 -----------------------------------------------------------------------------}}}
 -- Workspaces                                                                {{{
@@ -129,6 +181,7 @@ projects =
 --TODO: addName?
 --TODO: audio function keys
 --TODO: move some programs automatically to workspaces
+--TODO: split keys in different functionality (system, media, launchers)
 myAdditionalKeys =
   [ ("M-z"        , spawn "tilix -e vim -O ~/Dropbox/todo.txt/todo.txt ~/Dropbox/todo.txt/done.txt")
   , ("M-S-z"      , spawn "~/dotfiles/scripts/lockscreen.sh")
@@ -165,43 +218,3 @@ myStartupHook = do
   spawn "nm-applet"
 
 -- dual monitor? --> xrandr --output <DP-1> --left-of <DP-2> (xrandr -q for the names of DP-1 and DP-2)
-
-{-{{{
---myLayoutHook = showWorkspaceName -- TODO: find showWorkspaceName
---             $ onWorkspace wsFLOAT floatWorkSpace
---             $ fullscreenFloat
---             $ fullScreenToggle
---             $ fullBarToggle
---             $ mirrorToggle
---             $ reflectToggle
---             $ flex ||| tabs
---  where
---    floatWorkSpace    = simplestFloat
---    fullBarToggle     = mkToggle (single FULLBAR)
---    fullScreenToggle  = mkToggle (single FULL)
---    mirrorToggle      = mkToggle (single MIRROR)
---    reflectToggle     = mkToggle (single REFLECTX)
---    smallMonResWidth  = 1920
---    showWorkspaceName = showName' myShowNameTheme
---
---    named n           = renamed [(XMonad.Layout.Renamed.Replace n)]
---    trimNamed w n     = renamed [(XMonad.Layout.Renamed.CutWordsLeft w)]
---    suffixed n        = renamed [(XMonad.Layout.Renamed.PrependWords n)]
---    trimSuffixed w n  = renamed [(XMonad.Layout.Renamed.CutWordsRight w),
---                                 (XMonad.Layout.Renamed.AppendWords n)]
---
---    addTopBar         = noFrillsDeco shrinkText topBarTheme
---
---    mySpacing         = spacing gap
---    sGap              = quot gap 2
---    myGaps            = gaps [(U, gap),(D, gap),(L, gap),(R, gap)]
---    mySmallsGaps      = gaps [(U, sGap),(D, sGap),(L, sGap),(R, sGap)]
---    myBiggap*2s       = gaps [(U, gap*2),(D, gap*2),(L, gap*2),(R, gap*2)]
---
---    -- Tabs layout
---
---    threeCol = named "Unflexed"
---        $ avoidStruts
---        $ addTopBar
---        $ addTabs shrinkText myTabTheme
-}}}-}
