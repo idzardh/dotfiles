@@ -585,3 +585,9 @@ onoremap inl{ :<c-u>normal! F}vi{<cr>
 autocmd FileType haskell set expandtab
 
 " }}}
+"
+" {{{ 18. XML bindings
+autocmd FileType xml set expandtab
+autocmd FileType xml inoremap ;co <!-- --><esc>F<space>a
+
+" }}}
