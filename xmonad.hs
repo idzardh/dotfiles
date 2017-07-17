@@ -31,7 +31,6 @@ main = do
       , normalBorderColor  = "#111111"
       , focusedBorderColor = "#2c8fa0"
       , layoutHook         = avoidStruts $ smartBorders $ myLayouts
-      --, layoutHook         = avoidStruts $ layoutHook def
       , handleEventHook    = handleEventHook def <+> docksEventHook
       , startupHook        = myStartupHook
       , logHook            = dynamicLogWithPP $ xmobarPP
