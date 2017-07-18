@@ -188,7 +188,7 @@ set spelllang=en_gb
 "  au FileType h setlocal foldlevelstart=3
 "augroup END
 
-colorscheme elflord
+colorscheme default
 "desert
 
 hi Normal ctermbg=NONE

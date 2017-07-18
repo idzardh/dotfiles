@@ -211,6 +211,7 @@ myStartupHook = do
   --spawn "xrandr --output eDP1 --left-of HDMI1"
   spawn "feh --bg-fill ~/Pictures/awesome3.jpg"
   spawn "xcompmgr -c"
+  --TODO: replace with setxkbmap "cpas:swapescape"
   spawn "xmodmap -e 'clear Lock' -e 'keycode 0x42 = Escape'"
   spawn "trayer --edge top --align right --SetPartialStrut true --transparent true --alpha 000 --tint 0x000000 --expand false --heighttype pixel --height 19 --monitor 0 --padding 1 --widthtype percent --width 5"
   spawn "dropbox"
