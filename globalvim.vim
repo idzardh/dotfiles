@@ -25,6 +25,9 @@ Plugin 'scrooloose/nerdtree'
 Plugin 'Xuyuanp/nerdtree-git-plugin'
 Plugin 'tiagofumo/vim-nerdtree-syntax-highlight'
 
+" vim projectionist
+Plugin 'tpope/vim-projectionist'
+
 " Zeal browser
 Plugin 'KabbAmine/zeavim.vim'
 
@@ -125,6 +128,10 @@ let g:NERDTreeExtensionHighlightColor['tex'] = s:lightGreen
 let g:NERDTreeExtensionHighlightColor['pdf'] = s:darkOrange
 " }}}
 
+" vim-projectionist {{{
+
+" }}}
+
 " GitGutter settings {{{
 let g:gitgutter_map_keys = 0
 " }}}
@@ -166,10 +173,10 @@ let g:rbpt_max = 16
 let g:rbpt_loadcmd_toggle = 0
 
 au VimEnter * RainbowParenthesesToggle
-au VimEnter * RainbowParenthesesLoadBraces
-au VimEnter * RainbowParenthesesLoadRound
-au VimEnter * RainbowParenthesesLoadSquare
-au VimEnter * RainbowParenthesesLoadChevrons
+au Syntax * RainbowParenthesesLoadBraces
+au Syntax * RainbowParenthesesLoadRound
+au Syntax * RainbowParenthesesLoadSquare
+au Syntax * RainbowParenthesesLoadChevrons
 
 " }}}
 

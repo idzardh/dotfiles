@@ -1,6 +1,6 @@
 -- TODO: mpd args refresh rate!
-Config { font    = "xft:UbuntuMonoDerivativePowerline Nerd Font Regular:size=9"
-       , additionalFonts = ["xft:UbuntuMonoDerivativePowerline Nerd Font:size=10"]
+Config { font    = "xft:UbuntuMono Nerd Font Mono:size=12:antialias=true"
+       , additionalFonts = ["xft:UbuntuMono Nerd Font Mono:size=16:antialias=true"]
        , bgColor = "#000000" --"#392737"
        , fgColor = "#2c8fa0" --"grey"
        , alpha   = 220
@@ -8,7 +8,7 @@ Config { font    = "xft:UbuntuMonoDerivativePowerline Nerd Font Regular:size=9"
        , position = TopW L 95
        , commands = [
                       Run Cpu
-                        [ "-t", "<fn=1>\xf085</fn> <vbar>"
+                        [ "-t", "<fn=1>\xf085</fn> <total>"
                         , "-L", "2"
                         , "-H", "60"
                         , "-l", "#586e75"
@@ -16,7 +16,7 @@ Config { font    = "xft:UbuntuMonoDerivativePowerline Nerd Font Regular:size=9"
                         , "-h", "red"
                         ] 10
                     , Run Memory
-                        [ "-t", "<fn=1>\xf473</fn> <usedvbar>"
+                        [ "-t", "<fn=1>\xf473</fn> <usedratio>"
                         , "-p", "2"
                         , "-l", "#586e75"
                         , "-h", "#268bd2"

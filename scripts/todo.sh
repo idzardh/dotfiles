@@ -1,3 +1,3 @@
 #!/bin/zsh
 
-grep -c "." ~/Dropbox/todo.txt/todo.txt
+calcurse -t | grep -c "."

@@ -7,11 +7,13 @@ import XMonad.Layout.NoBorders              ( smartBorders )
 import XMonad.Util.EZConfig                 ( additionalKeysP )
 import XMonad.Util.Run                      ( runInTerm, spawnPipe, hPutStrLn )
 import XMonad.Util.Themes
+import XMonad.Util.SpawnOnce
 import XMonad.Actions.DynamicProjects
 import XMonad.Actions.DynamicWorkspaces
 import XMonad.Actions.SpawnOn
 import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.DynamicLog
+import XMonad.Hooks.SetWMName
 
 import qualified XMonad.StackSet as W
 
@@ -40,7 +42,7 @@ main = do
         , ppSep       = " | "
         , ppLayout    = (\x -> case (last . words) x of
                             "Tall"       -> " <fn=1>\xf04c</fn> "
-                            "ThreeCol"   -> " <fn=1>\xe0cf</fn> "
+                            "ThreeCol"   -> " <fn=1>\xe780</fn> "
                             "Full"       -> " <fn=1>\xf0c8</fn> "
                             _            -> x
                         )
@@ -183,6 +185,7 @@ projects =
 --TODO: audio function keys
 --TODO: move some programs automatically to workspaces
 --TODO: split keys in different functionality (system, media, launchers)
+--TODO: super enter = terminal
 myAdditionalKeys =
   [ ("M-z"        , spawn "tilix -e vim -o ~/Dropbox/todo.txt/todo.txt ~/Dropbox/todo.txt/done.txt")
   , ("M-S-z"      , spawn "~/dotfiles/scripts/lockscreen.sh")
@@ -193,6 +196,8 @@ myAdditionalKeys =
   , ("M-v"        , setSpacing mySpacing)
   , ("M-S-v"      , incSpacing (-mySpacing))
   , ("M-f"        , spawn myBrowser)
+  , ("M-g"        , spawn myTerminal)
+  , ("M-S-g"      , spawn "tilix -e vim ~/Documents/studie/master/afstudeeropdracht/notes/general.md")
   -- control key binds
   , ("C-S-="        , spawn "pactl set-sink-volume 1 +5%")
   , ("C-S--"        , spawn "pactl set-sink-volume 1 -5%")
@@ -218,31 +223,21 @@ myManageHook = composeAll
 -- Startup Hook                                                              {{{
 --------------------------------------------------------------------------------
 --TODO: check for dual monitor at startup -> xrandr?
---TODO: place trayer, dropbox and nm-applet into xinitrc? or maybe add to systemctl
+--TODO: place trayer, dropbox and nm-applet into xinitrc?
 myStartupHook = do
+  setWMName "LG3D"
   --spawn "xrandr --output eDP1 --left-of HDMI1"
   spawn "feh --bg-fill ~/.config/wall.png"
-  spawn "xcompmgr -c"
+  spawnOnce "xcompmgr -c"
   --spawn "xmodmap -e 'clear Lock' -e 'keycode 0x42 = Escape'"
 
   -- Set capslock to escape
-  spawn "setxkbmap -option ctrl:nocaps"
+  spawnOnce "setxkbmap -option ctrl:nocaps"
   -- in combination with another key capslock becomes ctrl
-  spawn "xcape -e 'Control_L=Escape'"
-
-  spawn "~/dotfiles/scripts/extrasuperkeys"
-
-  -- level 3 is selected by the backslash key
-  --spawn "setxkbmap -option lv3:bksl_switch"
-  -- compose can then be engaged with backslash windows
-  --spawn "setxkbmap -option compose:lwin-altgr"
-
-
-  -- re-enable backslash for typing
-  --spawn k
-
-  spawn "trayer --edge top --align right --SetPartialStrut true --transparent true --alpha 000 --tint 0x000000 --expand false --heighttype pixel --height 19 --monitor 0 --padding 1 --widthtype percent --width 5"
-  spawn "dropbox"
-  spawn "nm-applet"
+  spawnOnce "~/dotfiles/scripts/extrasuperkeys"
+  spawnOnce "xcape -e 'Control_L=Escape'"
+  spawnOnce "trayer --edge top --align right --SetPartialStrut true --transparent true --alpha 000 --tint 0x000000 --expand false --heighttype pixel --height 19 --monitor 0 --padding 1 --widthtype percent --width 5"
+  spawnOnce "dropbox"
+  spawnOnce "nm-applet"
 
 -- dual monitor? --> xrandr --output <DP-1> --left-of <DP-2> (xrandr -q for the names of DP-1 and DP-2)
