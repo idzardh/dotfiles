@@ -193,6 +193,7 @@ myAdditionalKeys =
   , ("M-v"        , setSpacing mySpacing)
   , ("M-S-v"      , incSpacing (-mySpacing))
   , ("M-f"        , spawn myBrowser)
+  , ("M-g"        , spawn myTerminal)
   -- control key binds
   , ("C-S-="        , spawn "pactl set-sink-volume 1 +5%")
   , ("C-S--"        , spawn "pactl set-sink-volume 1 -5%")
@@ -225,24 +226,20 @@ myStartupHook = do
   spawn "xcompmgr -c"
   --spawn "xmodmap -e 'clear Lock' -e 'keycode 0x42 = Escape'"
 
+  spawn "~/dotfiles/scripts/extrasuperkeys"
   -- Set capslock to escape
   spawn "setxkbmap -option ctrl:nocaps"
   -- in combination with another key capslock becomes ctrl
   spawn "xcape -e 'Control_L=Escape'"
 
-  spawn "~/dotfiles/scripts/extrasuperkeys"
-
   -- level 3 is selected by the backslash key
   --spawn "setxkbmap -option lv3:bksl_switch"
   -- compose can then be engaged with backslash windows
   --spawn "setxkbmap -option compose:lwin-altgr"
-
-
   -- re-enable backslash for typing
   --spawn k
-
   spawn "trayer --edge top --align right --SetPartialStrut true --transparent true --alpha 000 --tint 0x000000 --expand false --heighttype pixel --height 19 --monitor 0 --padding 1 --widthtype percent --width 5"
   spawn "dropbox"
-  spawn "nm-applet"
+  --spawn "nm-applet"
 
 -- dual monitor? --> xrandr --output <DP-1> --left-of <DP-2> (xrandr -q for the names of DP-1 and DP-2)

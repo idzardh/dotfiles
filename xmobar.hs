@@ -1,6 +1,6 @@
 -- TODO: mpd args refresh rate!
-Config { font    = "xft:UbuntuMonoDerivativePowerline Nerd Font Regular:size=9"
-       , additionalFonts = ["xft:UbuntuMonoDerivativePowerline Nerd Font:size=10"]
+Config { font    = "xft:SauceCodePro Nerd Font Medium:size=10"
+       , additionalFonts = ["xft:SpaceMono Nerd Font Mono:size=13"]
        , bgColor = "#000000" --"#392737"
        , fgColor = "#2c8fa0" --"grey"
        , alpha   = 220
