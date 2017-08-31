@@ -17,13 +17,20 @@ Plugin 'VundleVim/Vundle.vim'
 Plugin 'vim-airline/vim-airline'
 Plugin 'vim-airline/vim-airline-themes'
 
-" Coloured parentheses
+" Show matching parentheses
 Plugin 'kien/rainbow_parentheses.vim'
 
 " File tree sidebar
 Plugin 'scrooloose/nerdtree'
 Plugin 'Xuyuanp/nerdtree-git-plugin'
 Plugin 'tiagofumo/vim-nerdtree-syntax-highlight'
+
+" vim projectionist
+Plugin 'tpope/vim-projectionist'
+
+" Zeal browser
+Plugin 'KabbAmine/zeavim.vim'
+
 " git show additions compared to staged
 Plugin 'airblade/vim-gitgutter'
 
@@ -39,20 +46,23 @@ Plugin 'thinca/vim-quickrun'
 " Git plugin
 Plugin 'tpope/vim-fugitive'
 
+" Surround with ' " or (
+Plugin 'tpope/vim-surround'
+
+" Repeat
+Plugin 'tpope/vim-repeat'
+
+" extra mappings?
+Plugin 'tpope/vim-unimpaired'
+
 " Fuzzy finder
 Plugin 'ctrlpvim/ctrlp.vim'
 
 " Syntax checking
 Plugin 'scrooloose/syntastic'
+
 " Cpp completion
-" Plugin 'Valloric/YouCompleteMe'
 source /usr/share/vim/vimfiles/plugin/youcompleteme.vim
-
-" Latex Preview
-Plugin 'xuhdev/vim-latex-live-preview'
-
-" Ack integration
-Plugin 'mileszs/ack.vim'
 
 " Comment plugin
 Plugin 'tpope/vim-commentary'
@@ -118,6 +128,10 @@ let g:NERDTreeExtensionHighlightColor['tex'] = s:lightGreen
 let g:NERDTreeExtensionHighlightColor['pdf'] = s:darkOrange
 " }}}
 
+" vim-projectionist {{{
+
+" }}}
+
 " GitGutter settings {{{
 let g:gitgutter_map_keys = 0
 " }}}
@@ -136,12 +150,42 @@ let g:ycm_extra_conf_globlist = ['~/dev/*','!~/*']
 " }}}
 
 " rainbow parentheses {{{
+let g:rbpt_colorpairs = [
+    \ ['brown',       'RoyalBlue3'],
+    \ ['Darkblue',    'SeaGreen3'],
+    \ ['darkgreen',   'firebrick3'],
+    \ ['darkcyan',    'RoyalBlue3'],
+    \ ['darkred',     'SeaGreen3'],
+    \ ['darkmagenta', 'DarkOrchid3'],
+    \ ['gray',        'RoyalBlue3'],
+    \ ['darkred',     'DarkOrchid3'],
+    \ ['black',       'SeaGreen3'],
+    \ ['red',         'firebrick3'],
+    \ ['darkmagenta', 'DarkOrchid3'],
+    \ ['darkgray',    'DarkOrchid3'],
+    \ ['Darkblue',    'firebrick3'],
+    \ ['brown',       'firebrick3'],
+    \ ['darkgreen',   'RoyalBlue3'],
+    \ ['darkcyan',    'SeaGreen3'],
+    \ ]
+
+let g:rbpt_max = 16
+let g:rbpt_loadcmd_toggle = 0
+
 au VimEnter * RainbowParenthesesToggle
+au Syntax * RainbowParenthesesLoadBraces
 au Syntax * RainbowParenthesesLoadRound
 au Syntax * RainbowParenthesesLoadSquare
-au Syntax * RainbowParenthesesLoadBraces
 au Syntax * RainbowParenthesesLoadChevrons
+
 " }}}
+
+" zeavim {{{
+let g:zv_file_types = {
+  \ 'cpp' : 'cpp'
+  \ }
+" }}}
+
 "}}}
 
 " 4. Vim Settings {{{
@@ -249,7 +293,9 @@ nnoremap <F3> :noh<cr>
 nnoremap <F4> :%s/\r//g<cr>
 
 nnoremap <F5> :let _s=@/<bar>:%s/\s\+$//e<bar>:let @/=_s<bar><cr>
-" F6
+nnoremap <F6> i<c-r>=strftime("%Y-%m-%d")<cr><esc>
+inoremap <F6> <c-r>=strftime("%Y-%m-%d")<cr>
+
 " F7
 " F8
 
@@ -267,8 +313,9 @@ inoremap <c-f> <c-x><c-f>
 inoremap <c-l> <c-x><c-l>
 " toggle line numbers relative or absolute
 nnoremap <C-n> :call NumberToggle()<cr>
-" make new enter appear beneath the current one in edit mode
-inoremap <c-cr> <c-o>o
+" clang-format
+nnoremap <C-K> :pyf /usr/share/clang/clang-format.py<cr>
+vnoremap <C-K> :pyf /usr/share/clang/clang-format.py<cr>
 
 " }}}
 
@@ -306,7 +353,7 @@ nnoremap <leader>0 0
 nnoremap <silent> <leader>W :set wrap!<cr>
 "switch folds
 nnoremap <leader>a za
-nnoremap <leader>z zMzvzz
+nnoremap <leader>A zMzvzz
 " highlight interesting words without searching
 nnoremap <silent> <leader>1 :call HiInterestingWord(1)<cr>
 nnoremap <silent> <leader>2 :call HiInterestingWord(2)<cr>
@@ -565,6 +612,14 @@ endfunction
 autocmd FileType h,cpp inoremap ;co const
 " make ;ros
 autocmd FileType h,cpp inoremap ;r ros::
+" access specifier
+autocmd FileType h,cpp inoremap ;; ::
+
+" Doxygen templates
+" File header
+autocmd FileType h,cpp inoremap ;dofi /*!<cr>\file <cr><cr>\author <++><cr>\date <++><cr><cr><++><cr>/<esc>6kA
+autocmd FileType h,cpp inoremap ;docl /*!<cr>\class <cr><cr>\brief <++><cr><cr><++><cr><cr>\author <++><cr>\date <++><cr>/<esc>8kA
+autocmd FileType h,cpp inoremap ;dofu /*!<cr>\brief <cr><cr><++><cr><cr>\param[in] <++><cr>\param[out] <++><cr>\return <++><cr>\sa <++><cr>\note <++><cr>/<esc>9kA
 " }}}
 
 " 14. Macros {{{

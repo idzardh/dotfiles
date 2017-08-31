@@ -8,7 +8,7 @@ Config { font    = "xft:SauceCodePro Nerd Font Medium:size=10"
        , position = TopW L 95
        , commands = [
                       Run Cpu
-                        [ "-t", "<fn=1>\xf085</fn> <vbar>"
+                        [ "-t", "<fn=1>\xf085</fn> <total>"
                         , "-L", "2"
                         , "-H", "60"
                         , "-l", "#586e75"
@@ -16,7 +16,7 @@ Config { font    = "xft:SauceCodePro Nerd Font Medium:size=10"
                         , "-h", "red"
                         ] 10
                     , Run Memory
-                        [ "-t", "<fn=1>\xf473</fn> <usedvbar>"
+                        [ "-t", "<fn=1>\xf473</fn> <usedratio>"
                         , "-p", "2"
                         , "-l", "#586e75"
                         , "-h", "#268bd2"
