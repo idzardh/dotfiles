@@ -235,7 +235,6 @@ myStartupHook = do
   -- Set capslock to escape
   spawnOnce "setxkbmap -option ctrl:nocaps"
   -- in combination with another key capslock becomes ctrl
-  spawnOnce "~/dotfiles/scripts/extrasuperkeys"
   spawnOnce "xcape -e 'Control_L=Escape'"
   spawnOnce "trayer --edge top --align right --SetPartialStrut true --transparent true --alpha 000 --tint 0x000000 --expand false --heighttype pixel --height 19 --monitor 0 --padding 1 --widthtype percent --width 5"
   spawnOnce "dropbox"
