@@ -218,6 +218,9 @@ set tags=tags;
 " language
 set spelllang=en_gb
 
+" cpp include path (ros)
+set path+=../include/
+
 " cpp folds
 "augroup ft_cpp
 "  au!
