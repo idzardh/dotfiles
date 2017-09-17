@@ -11,6 +11,7 @@ import XMonad.Hooks.ManageHelpers
 import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.Minimize
 import XMonad.Hooks.Place
+import XMonad.Hooks.SetWMName
 
 import XMonad.Util.Run
 import XMonad.Util.EZConfig         ( additionalKeysP )
@@ -53,6 +54,7 @@ main = do
 
 
 myStartupHook = do
+  setWMName "LG3D"
   spawn "$HOME/dotfiles/.config/polybar/launch.sh"
   spawn "dropbox"
 

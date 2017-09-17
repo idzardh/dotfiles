@@ -4,7 +4,7 @@ This repository contains the dotfiles for various programs I use. Although they 
 
 I currently use XMonad (xmonad.org) with polybar (https://github.com/jaagr/polybar). For editing and coding I use vim (dotfiles can be found below) and tmux.
 
-Some screenshots of my system can be found here: https://idzardblog.wordpress.com/xmonad-and-polybar
+Some screenshots of my system can be found here: https://idzardblog.wordpress.com/2017/09/17/xmonad-polybar/
 
 ## Contents
 
