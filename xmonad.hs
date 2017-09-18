@@ -15,6 +15,7 @@ import XMonad.Hooks.SetWMName
 
 import XMonad.Util.Run
 import XMonad.Util.EZConfig         ( additionalKeysP )
+import XMonad.Util.NamedActions
 
 import XMonad.Layout.IM
 import XMonad.Layout.LayoutModifier (ModifiedLayout(..))
@@ -167,6 +168,9 @@ myAdditionalKeys =
   , ("C-S--"        , spawn "pactl set-sink-volume 1 -5%")
   --, ("M-a"        , switchProjectPrompt)
   --, ("M-z"        , shiftToProjectPrompt)
+  -- F keys (meta function)
+  , ("<XF86MonBrightnessUp>", spawn "xbacklight -inc 10")
+  , ("<XF86MonBrightnessDown>", spawn "xbacklight -dec 10")
   ]
 
 -- Emit a DBus signal on log updates
