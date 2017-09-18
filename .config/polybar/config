@@ -1,7 +1,9 @@
 
+; TODO: change example config to inherit from base
+
 [colors]
 background = #d0303030
-background-alt = #504945
+background-alt = #c0303030
 foreground = #eeeeee
 foreground-alt = #c1c2c3
 
@@ -29,6 +31,45 @@ margin-bottom = 0
 [settings]
 screenchange-reload = true
 
+[bar/base]
+width = 100%
+height = 28
+offset-x = 0
+offset-y = 0
+
+background = ${colors.background}
+foreground = ${colors.foreground}
+
+overline-size = 0
+underline-size = 0
+
+border-bottom-size = 0
+border-bottom-color = #ffffff
+
+spacing = 1
+padding-left = 0
+padding-right = 2
+module-margin-left = 1
+module-margin-right = 2
+
+font-0 = LiberationMono:fontformat=truetype:size=10:antialias=true;1
+font-1 = SpaceMono Nerd Font Mono:fontformat=truetype:size=16:antialias=true;3
+font-2 = SpaceMono Nerd Font Mono:pixelsize=10;1
+font-3 = Siji:fontformat=truetype:size=12:antialias=true;1
+
+radius = 0.0
+fixed-center = false
+
+line-size = 3
+line-color = #f00
+
+border-size = 0
+border-color = #00000000
+
+tray-position = right
+tray-padding = 2
+tray-background = ${root.background}
+
 [bar/example]
 monitor = ${env:MONITOR:HDMI-A-1}
 width = 100%
@@ -54,6 +95,7 @@ module-margin-right = 2
 font-0 = LiberationMono:fontformat=truetype:size=10:antialias=true;1
 font-1 = SpaceMono Nerd Font Mono:fontformat=truetype:size=16:antialias=true;3
 font-2 = SpaceMono Nerd Font Mono:pixelsize=10;1
+font-3 = Siji:fontformat=truetype:size=16:antialias=true;3
 
 radius = 0.0
 fixed-center = false
@@ -71,6 +113,14 @@ modules-right = volume updates memory cpu date powermenu
 tray-position = right
 tray-padding = 2
 tray-background = ${root.background}
+
+[bar/laptop]
+inherit = bar/base
+monitor = ${env:MONITOR:eDP1}
+
+modules-left = xmonad
+modules-center = mpd volume
+modules-right = backlight battery updates cpu memory date powermenu
 
 [module/xmonad]
 type = custom/script
@@ -117,12 +167,37 @@ format-prefix = " "
 format-prefix-foreground = ${colors.foreground}
 format-underline = ${colors.grey}
 
-tail = false
 interval = 120
+
+[module/battery]
+type = internal/battery
+battery = BAT1
+adapter = ADP1
+full-at = 98
+
+format-charging = <animation-charging>
+format-discharging = <ramp-capacity>
+format-full-prefix = "f "
+format-full-prefix-foreground = ${colors.foreground}
+
+ramp-capacity-0 = ""
+ramp-capacity-1 = ""
+ramp-capacity-2 = ""
+ramp-capacity-3 = ""
+ramp-capacity-4 = ""
+ramp-capacity-foreground = ${colors.foreground}
+
+animation-charging-0 = ""
+animation-charging-1 = ""
+animation-charging-2 = ""
+animation-charging-3 = ""
+animation-charging-4 = ""
+animation-charging-foreground = ${colors.foreground}
+animation-charging-framerate = 750
 
 [module/mpd]
 type = internal/mpd
-format-online = <label-song>  <icon-prev> <icon-stop> <toggle> <icon-next> <bar-progress>
+format-online = <label-song>
 
 icon-prev = 
 icon-stop = 
@@ -133,7 +208,7 @@ icon-next = 
 label-song-maxlen = 40
 label-song-ellipsis = true
 
-bar-progress-width = 20
+bar-progress-width = 10
 bar-progress-indicator = 
 bar-progress-fill = _
 bar-progress-empty = _
@@ -141,6 +216,15 @@ bar-progress-empty = _
 [module/cpu]
 type = internal/cpu
 interval = 2
+format = <ramp-load>
+ramp-load-7 = █
+ramp-load-6 = ▇
+ramp-load-5 = ▆
+ramp-load-4 = ▅
+ramp-load-3 = ▄
+ramp-load-2 = ▃
+ramp-load-1 = ▂
+ramp-load-0 = ▁
 format-prefix = " "
 format-prefix-foreground = ${colors.foreground}
 format-underline = ${colors.grey}
@@ -172,7 +256,7 @@ date =
 date-alt = " %Y-%m-%d"
 
 time = %H:%M
-time-alt = %H:%M:%S
+time-alt = %H:%M
 
 format-prefix = 
 format-prefix-foreground = ${colors.foreground}
@@ -208,16 +292,28 @@ bar-volume-empty = 
 bar-volume-empty-font = 1
 bar-volume-empty-foreground = ${colors.foreground}
 
+[module/backlight]
+type = internal/xbacklight
+enable-scroll = false
+format-underline = ${colors.grey}
+format = <ramp>
+ramp-0 = 🌕
+ramp-1 = 🌔
+ramp-2 = 🌓
+ramp-3 = 🌒
+ramp-4 = 🌑
+
 [module/powermenu]
 type = custom/menu
 
+format-underline = ${colors.grey}
 expand-right = true
 
 format-spacing = 1
 
 label-open = 
 label-open-foreground = ${colors.secondary}
-label-close =  cancel
+label-close = 
 label-close-foreground = ${colors.secondary}
 label-separator = |
 label-separator-foreground = ${colors.foreground}
