@@ -173,9 +173,11 @@ type = internal/battery
 battery = BAT1
 adapter = ADP1
 full-at = 98
+time-format = %H:%M
 
 format-charging = <animation-charging>
-format-discharging = <ramp-capacity>
+format-discharging = <ramp-capacity> <label-discharging>
+label-discharging = %time%
 format-full-prefix = "f "
 format-full-prefix-foreground = ${colors.foreground}
 
