@@ -148,7 +148,6 @@ myLogHook dbus = def
     }
 
 --TODO: addName?
---TODO: audio function keys
 --TODO: move some programs automatically to workspaces
 --TODO: split keys in different functionality (system, media, launchers)
 myAdditionalKeys =
@@ -168,9 +167,17 @@ myAdditionalKeys =
   , ("C-S--"        , spawn "pactl set-sink-volume 1 -5%")
   --, ("M-a"        , switchProjectPrompt)
   --, ("M-z"        , shiftToProjectPrompt)
-  -- F keys (meta function)
+  -- F keys (meta function) -- brightness
   , ("<XF86MonBrightnessUp>", spawn "xbacklight -inc 10")
   , ("<XF86MonBrightnessDown>", spawn "xbacklight -dec 10")
+  -- mpc
+  , ("<XF86AudioPrev>", spawn "mpc prev")
+  , ("<XF86AudioNext>", spawn "mpc next")
+  , ("<XF86AudioPlay>", spawn "mpc toggle")
+  -- volume
+  , ("<XF86AudioRaiseVolume>", spawn "pactl set-sink-volume 1 +5%")
+  , ("<XF86AudioLowerVolume>", spawn "pactl set-sink-volume 1 -5%")
+  , ("<XF86AudioMute>", spawn "pactl set-sink-mute 1 toggle")
   ]
 
 -- Emit a DBus signal on log updates
