@@ -27,6 +27,7 @@ main = do
   xmproc <- spawnPipe "xmobar ~/.xmonad/xmobar.hs"
   xmonad
     -- $ dynamicProjects projects
+    $ ewmh
     $ def
       { terminal           = myTerminal
       , modMask            = myModMask
@@ -185,9 +186,8 @@ projects =
 --TODO: audio function keys
 --TODO: move some programs automatically to workspaces
 --TODO: split keys in different functionality (system, media, launchers)
---TODO: super enter = terminal
 myAdditionalKeys =
-  [ ("M-z"        , spawn "tilix -e vim -o ~/Dropbox/todo.txt/todo.txt ~/Dropbox/todo.txt/done.txt")
+  [ ("M-z"        , spawn "tilix -e calcurse")
   , ("M-S-z"      , spawn "~/dotfiles/scripts/lockscreen.sh")
   , ("M-s"        , spawn "steam")
   , ("M-S-s"      , spawn "systemctl suspend")
@@ -228,16 +228,16 @@ myStartupHook = do
   setWMName "LG3D"
   --spawn "xrandr --output eDP1 --left-of HDMI1"
   spawn "feh --bg-fill ~/.config/wall.png"
-  spawnOnce "xcompmgr -c"
+  spawn "xcompmgr -c"
   --spawn "xmodmap -e 'clear Lock' -e 'keycode 0x42 = Escape'"
 
   spawn "~/dotfiles/scripts/extrasuperkeys"
   -- Set capslock to escape
-  spawnOnce "setxkbmap -option ctrl:nocaps"
+  spawn "setxkbmap -option ctrl:nocaps"
   -- in combination with another key capslock becomes ctrl
-  spawnOnce "xcape -e 'Control_L=Escape'"
-  spawnOnce "trayer --edge top --align right --SetPartialStrut true --transparent true --alpha 000 --tint 0x000000 --expand false --heighttype pixel --height 19 --monitor 0 --padding 1 --widthtype percent --width 5"
-  spawnOnce "dropbox"
-  spawnOnce "nm-applet"
+  spawn "xcape -e 'Control_L=Escape'"
+  spawn "trayer --edge top --align right --SetPartialStrut true --transparent true --alpha 000 --tint 0x000000 --expand false --heighttype pixel --height 19 --monitor 0 --padding 1 --widthtype percent --width 5"
+  spawn "dropbox"
+  spawn "nm-applet"
 
 -- dual monitor? --> xrandr --output <DP-1> --left-of <DP-2> (xrandr -q for the names of DP-1 and DP-2)
