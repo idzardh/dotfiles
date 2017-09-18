@@ -1,66 +1,68 @@
-import XMonad                        hiding ( (|||) )
-import XMonad.Layout.Spacing
-import XMonad.Layout.LayoutCombinators
-import XMonad.Layout.ThreeColumns
-import XMonad.Layout.NoFrillsDecoration
-import XMonad.Layout.NoBorders              ( smartBorders )
-import XMonad.Util.EZConfig                 ( additionalKeysP )
-import XMonad.Util.Run                      ( runInTerm, spawnPipe, hPutStrLn )
-import XMonad.Util.Themes
-import XMonad.Util.SpawnOnce
-import XMonad.Actions.DynamicProjects
-import XMonad.Actions.DynamicWorkspaces
-import XMonad.Actions.SpawnOn
-import XMonad.Hooks.ManageDocks
+import XMonad
+import XMonad.Actions.Navigation2D
+import XMonad.Actions.FloatKeys
+import XMonad.Actions.FloatSnap
+import XMonad.Actions.Submap
+
+import XMonad.Hooks.EwmhDesktops
 import XMonad.Hooks.DynamicLog
+import XMonad.Hooks.UrgencyHook
+import XMonad.Hooks.ManageHelpers
+import XMonad.Hooks.ManageDocks
+import XMonad.Hooks.Minimize
+import XMonad.Hooks.Place
 import XMonad.Hooks.SetWMName
 
+import XMonad.Util.Run
+import XMonad.Util.EZConfig         ( additionalKeysP )
+
+import XMonad.Layout.IM
+import XMonad.Layout.LayoutModifier (ModifiedLayout(..))
+import XMonad.Layout.Minimize
+import XMonad.Layout.NoBorders
+import XMonad.Layout.Renamed
+import XMonad.Layout.Tabbed
+import XMonad.Layout.Spacing
+import XMonad.Layout.ThreeColumns
+
+import qualified XMonad.Layout.BoringWindows as B
+import qualified DBus as D
+import qualified DBus.Client as D
+
+import System.Exit
+import Graphics.X11.ExtraTypes.XF86
+
 import qualified XMonad.StackSet as W
+import qualified Data.Map        as M
+import Data.Ratio ((%))
 
-import qualified Data.Map as M
+import qualified Codec.Binary.UTF8.String as UTF8
 
------------------------------------------------------------------------------}}}
--- Main                                                                      {{{
---------------------------------------------------------------------------------
-
+main :: IO ()
 main = do
-  xmproc <- spawnPipe "xmobar ~/.xmonad/xmobar.hs"
-  xmonad
-    -- $ dynamicProjects projects
-    $ ewmh
-    $ def
-      { terminal           = myTerminal
-      , modMask            = myModMask
-      , borderWidth        = myBorderWidth
-      , normalBorderColor  = "#111111"
-      , focusedBorderColor = "#2c8fa0"
-      , layoutHook         = avoidStruts $ smartBorders $ myLayouts
-      , handleEventHook    = handleEventHook def <+> docksEventHook
-      , startupHook        = myStartupHook
-      , logHook            = dynamicLogWithPP $ xmobarPP
-        { ppOutput    = hPutStrLn xmproc
-        , ppCurrent   = xmobarColor "#2c8fa0" "" . wrap "[" "]"
-        , ppSep       = " | "
-        , ppLayout    = (\x -> case (last . words) x of
-                            "Tall"       -> " <fn=1>\xf04c</fn> "
-                            "ThreeCol"   -> " <fn=1>\xe780</fn> "
-                            "Full"       -> " <fn=1>\xf0c8</fn> "
-                            _            -> x
-                        )
-        , ppTitle     = xmobarColor "#2c8fa0" "" . shorten 50
-        }
-      , workspaces         = myWorkspaces
-      , manageHook         = myManageHook <+> manageHook def
-      }
-      `additionalKeysP` myAdditionalKeys
+  dbus <- D.connectSession
+  -- Request access to the DBus name
+  D.requestName dbus (D.busName_ "org.xmonad.Log")
+    [D.nameAllowReplacement, D.nameReplaceExisting, D.nameDoNotQueue]
+  xmonad . ewmh . withUrgencyHook NoUrgencyHook .
+    withNavigation2DConfig defaultNavigation2DConfig $
+      myConfig
+        { logHook = dynamicLogWithPP (myLogHook dbus)
+        , startupHook = myStartupHook
+        } `additionalKeysP` myAdditionalKeys
 
------------------------------------------------------------------------------}}}
--- Simple configuration variable                                             {{{
+
+myStartupHook = do
+  setWMName "LG3D"
+  spawn "$HOME/dotfiles/.config/polybar/launch.sh"
+  spawn "dropbox"
+
+-- Variables
 --------------------------------------------------------------------------------
 
 myTerminal    = "tilix"
 myModMask     = mod4Mask
-myBorderWidth = 2
+myBorderWidth = 1
 myLayout      = Tall 1 (3/100) (1/2)
 myBrowser     = "firefox"
 
@@ -69,118 +71,79 @@ mySpacing     = 5
 noSpacing :: Int
 noSpacing     = 0
 
------------------------------------------------------------------------------}}}
--- Layouts                                                                   {{{
---------------------------------------------------------------------------------
+modMask' :: KeyMask
+modMask' = mod4Mask
 
--- better specify layouts
-myLayouts = spacing mySpacing $ myLayout ||| ThreeColMid 1 (3/100) (1/2) ||| ThreeCol 1 (3/100) (1/3) ||| Full
+delta :: Rational
+delta = 3 / 100
 
--- addTopBar = noFrillsDeco shrinkText topBarTheme
+fg        = "#ebdbb2"
+bg        = "#282828"
+gray      = "#a89984"
+bg1       = "#3c3836"
+bg2       = "#505050"
+bg3       = "#665c54"
+bg4       = "#7c6f64"
 
------------------------------------------------------------------------------}}}
--- Themes & Colours                                                          {{{
---------------------------------------------------------------------------------
+green     = "#b8bb26"
+darkgreen = "#98971a"
+red       = "#fb4934"
+darkred   = "#cc241d"
+yellow    = "#fabd2f"
+blue      = "#83a598"
+purple    = "#d3869b"
+aqua      = "#8ec07c"
 
-topBarTheme = def
-  { fontName              = myFont
-  , inactiveBorderColor   = base03
-  , inactiveColor         = base03
-  , inactiveTextColor     = base03
-  , activeBorderColor     = active
-  , activeColor           = active
-  , activeTextColor       = active
-  , urgentBorderColor     = red
-  , urgentTextColor       = yellow
-  , decoHeight            = topbar
- }
+pur2      = "#5b51c9"
 
--- fonts
-myFont = "xft:UbuntuMonoDerivativePowerline Nerd Font Regular:size=9"
+myIM :: LayoutClass l a => l a -> ModifiedLayout AddRoster l a
+myIM = withIM (1 % 4) (ClassName "TelegramDesktop")
 
--- sizes
-topbar    = 10
+myLayouts = renamed [CutWordsLeft 2] $ spacing mySpacing $ renamed [CutWordsLeft 1] .
+    avoidStruts . minimize . B.boringWindows $
+    smartBorders
+        ( aTiled
+        ||| aFullscreen
+        ||| aThreeColMid
+        )
+  where
+    aFullscreen = renamed [Replace "Full"] $ noBorders Full
+    aTiled = renamed [Replace "Main"] $ myIM $ Tall 1 (3/100) (1/2)
+    aThreeColMid = renamed [Replace "3Col"] $ ThreeColMid 1 (3/100) (1/2)
 
--- colours for themes
-active       = blue
-activeWarn   = red
-inactive     = base02
-focusColor   = blue
-unfocusColor = base02
+wsGEN = "\xf269"
+wsWRK = "\xf02d"
+wsSYS = "\xf300"
+wsMED = "\xf001"
+wsTMP = "\xf2db"
+wsGAM = "\xf11b"
 
--- colours (Thanks to Altercation!)
-base03  = "#002b36"
-base02  = "#073642"
-base01  = "#586e75"
-base00  = "#657b83"
-base0   = "#839496"
-base1   = "#93a1a1"
-base2   = "#eee8d5"
-base3   = "#fdf6e3"
-yellow  = "#b58900"
-orange  = "#cb4b16"
-red     = "#dc322f"
-magenta = "#d33682"
-violet  = "#6c71c4"
-blue    = "#268bd2"
-cyan    = "#2aa198"
-green   = "#859900"
+workspaces' :: [String]
+workspaces' = [wsGEN, wsWRK, wsSYS, wsMED, wsTMP, wsGAM, "7", "8", "9"]
 
------------------------------------------------------------------------------}}}
--- Workspaces                                                                {{{
---------------------------------------------------------------------------------
+myManageHook = composeAll
+    [ className =? "MPlayer"          --> doFloat
+    , className =? "Gimp"             --> doFloat
+    , resource  =? "desktop_window"   --> doIgnore
+    , className =? "feh"              --> doFloat
+    , className =? "Gpick"            --> doFloat
+    , role =? "pop-up"                --> doFloat ]
+  where
+    role = stringProperty "WM_WINDOW_ROLE"
 
--- fa icons!
-wsGEN = "1: <fn=1>\xf269</fn> "
-wsWRK = "2: <fn=1>\xf02d</fn> "
-wsSYS = "3: <fn=1>\xf300</fn> "
-wsMED = "4: <fn=1>\xf001</fn> "
-wsTMP = "5: <fn=1>\xf103</fn> "
-wsGAM = "6: <fn=1>\xf11b</fn> "
+myManageHook' = composeOne [ isFullscreen -?> doFullFloat ]
 
-myWorkspaces :: [String]
-myWorkspaces = [wsGEN, wsWRK, wsSYS, wsMED, wsTMP, wsGAM]
-
------------------------------------------------------------------------------}}}
--- Projects                                                                  {{{
---------------------------------------------------------------------------------
-
-projects :: [Project]
-projects =
-  [ Project { projectName       = wsGEN
-            , projectDirectory  = "~/"
-            , projectStartHook  = Nothing
-            }
-
-  , Project { projectName       = wsWRK
-            , projectDirectory  = "~/Documents/studie"
-            , projectStartHook  = Just $ do spawnOn wsWRK myTerminal
-                                            spawnOn wsWRK myBrowser
-            }
-
-  , Project { projectName       = wsSYS
-            , projectDirectory  = "~/"
-            , projectStartHook  = Just $ do spawnOn wsSYS myTerminal
-                                            runInTerm "" "htop"
-                                            spawnOn wsSYS myTerminal
-            }
-
-  , Project { projectName       = wsMED
-            , projectDirectory  = "~/"
-            , projectStartHook  = Just $ do spawnOn wsMED myTerminal
-                                            spawnOn wsMED myTerminal
-                                            spawnOn wsMED myBrowser
-            }
-
-  , Project { projectName       = wsTMP
-            , projectDirectory  = "~/"
-            , projectStartHook  = Just $ do return ()
-            }
-  ]
-
------------------------------------------------------------------------------}}}
--- Keys                                                                      {{{
---------------------------------------------------------------------------------
+myLogHook :: D.Client -> PP
+myLogHook dbus = def
+    { ppOutput = dbusOutput dbus
+    , ppCurrent = wrap ("%{B" ++ bg2 ++ "} ") " %{B-}"
+    , ppVisible = wrap ("%{B" ++ bg1 ++ "} ") " %{B-}"
+    , ppUrgent = wrap ("%{F" ++ red ++ "} ") " %{F-}"
+    , ppHidden = wrap " " " "
+    , ppWsSep = ""
+    , ppSep = " | "
+    , ppTitle = shorten 25
+    }
 
 --TODO: addName?
 --TODO: audio function keys
@@ -205,39 +168,32 @@ myAdditionalKeys =
   --, ("M-z"        , shiftToProjectPrompt)
   ]
 
------------------------------------------------------------------------------}}}
--- managehook                                                                {{{
---------------------------------------------------------------------------------
-
-myManageHook = composeAll
-  [ className =? "steam" --> doShift wsGAM
-  , className =? "Xmessage" --> doFloat
-  , className =? "nautilus" --> doShift wsWRK
-  , manageDocks
-  , (role =? "gimp-toolbox" <||> role =? "gimp-image-window") --> (ask >>= doF . W.sink)
-  ]
+-- Emit a DBus signal on log updates
+dbusOutput :: D.Client -> String -> IO ()
+dbusOutput dbus str = do
+    let signal = (D.signal objectPath interfaceName memberName) {
+            D.signalBody = [D.toVariant $ UTF8.decodeString str]
+        }
+    D.emit dbus signal
   where
-    role = stringProperty "WM_WINDOW_ROLE"
+    objectPath = D.objectPath_ "/org/xmonad/Log"
+    interfaceName = D.interfaceName_ "org.xmonad.Log"
+    memberName = D.memberName_ "Update"
 
------------------------------------------------------------------------------}}}
--- Startup Hook                                                              {{{
---------------------------------------------------------------------------------
---TODO: check for dual monitor at startup -> xrandr?
---TODO: place trayer, dropbox and nm-applet into xinitrc?
-myStartupHook = do
-  setWMName "LG3D"
-  --spawn "xrandr --output eDP1 --left-of HDMI1"
-  spawn "feh --bg-fill ~/.config/wall.png"
-  spawn "xcompmgr -c"
-  --spawn "xmodmap -e 'clear Lock' -e 'keycode 0x42 = Escape'"
-
-  spawn "~/dotfiles/scripts/extrasuperkeys"
-  -- Set capslock to escape
-  spawn "setxkbmap -option ctrl:nocaps"
-  -- in combination with another key capslock becomes ctrl
-  spawn "xcape -e 'Control_L=Escape'"
-  spawn "trayer --edge top --align right --SetPartialStrut true --transparent true --alpha 000 --tint 0x000000 --expand false --heighttype pixel --height 19 --monitor 0 --padding 1 --widthtype percent --width 5"
-  spawn "dropbox"
-  spawn "nm-applet"
-
--- dual monitor? --> xrandr --output <DP-1> --left-of <DP-2> (xrandr -q for the names of DP-1 and DP-2)
+myConfig = def
+    { terminal = "tilix"
+    , layoutHook = myLayouts
+    , manageHook = placeHook (smart (0.5, 0.5))
+                    <+> manageDocks
+                    <+> myManageHook
+                    <+> myManageHook'
+                    <+> manageHook def
+    , handleEventHook = docksEventHook <+> minimizeEventHook <+> fullscreenEventHook
+    -- Don't be stupid with focus
+    , focusFollowsMouse = False
+    , clickJustFocuses = False
+    , borderWidth = myBorderWidth
+    , normalBorderColor = gray
+    , focusedBorderColor = pur2
+    , workspaces = workspaces'
+, modMask = modMask' }

@@ -1,0 +1,246 @@
+
+[colors]
+background = #d0303030
+background-alt = #504945
+foreground = #eeeeee
+foreground-alt = #c1c2c3
+
+red = #fb4934
+green = #b8bb26
+yellow = #fabd2f
+blue = #83a598
+purple = #d3869b
+aqua = #8ec07c
+orange = #fe8019
+white = #dddddd
+
+grey = #5b51c9
+grey1 = #5bb1c9
+grey2 = #5bf1c9
+
+primary = green
+secondary = blue
+alert = red
+
+[global/wm]
+margin-top = 0
+margin-bottom = 0
+
+[settings]
+screenchange-reload = true
+
+[bar/example]
+monitor = ${env:MONITOR:HDMI-A-1}
+width = 100%
+height = 28
+offset-x = 0
+offset-y = 0
+
+background = ${colors.background}
+foreground = ${colors.foreground}
+
+overline-size = 0
+underline-size = 0
+
+border-bottom-size = 0
+border-bottom-color = #ffffff
+
+spacing = 1
+padding-left = 0
+padding-right = 2
+module-margin-left = 1
+module-margin-right = 2
+
+font-0 = LiberationMono:fontformat=truetype:size=10:antialias=true;1
+font-1 = SpaceMono Nerd Font Mono:fontformat=truetype:size=16:antialias=true;3
+font-2 = SpaceMono Nerd Font Mono:pixelsize=10;1
+
+radius = 0.0
+fixed-center = false
+
+line-size = 3
+line-color = #f00
+
+border-size = 0
+border-color = #00000000
+
+modules-left = xmonad
+modules-center = mpd
+modules-right = volume updates memory cpu date powermenu
+
+tray-position = right
+tray-padding = 2
+tray-background = ${root.background}
+
+[module/xmonad]
+type = custom/script
+exec = xmonad-log
+
+tail = true
+
+[module/xwindow]
+type = internal/xwindow
+label = %title:0:30:...%
+
+[module/xkeyboard]
+type = internal/xkeyboard
+blacklist-0 = num lock
+
+format-prefix = " "
+format-prefix-foreground = ${colors.foreground}
+format-prefix-underline = ${colors.grey}
+
+label-layout = %layout%
+label-layout-underline = ${colors.secondary}
+
+label-indicator-padding = 2
+label-indicator-margin = 1
+label-indicator-background = ${colors.secondary}
+label-indicator-underline = ${colors.grey}
+
+[module/filesystem]
+type = internal/fs
+interval = 25
+
+mount-0 = /
+mount-1 = /home/idzard/harddrive
+
+label-mounted = %{F#5b51c9}%mountpoint%%{F-}: %percentage_used%%
+label-unmounted = %mountpoint% not mounted
+label-unmounted-foreground = ${colors.foreground}
+
+[module/updates]
+type = custom/script
+exec = $HOME/dotfiles/scripts/updates.sh
+
+format-prefix = " "
+format-prefix-foreground = ${colors.foreground}
+format-underline = ${colors.grey}
+
+tail = false
+interval = 120
+
+[module/mpd]
+type = internal/mpd
+format-online = <label-song>  <icon-prev> <icon-stop> <toggle> <icon-next> <bar-progress>
+
+icon-prev = 
+icon-stop = 
+icon-play = 
+icon-pause = 
+icon-next = 
+
+label-song-maxlen = 40
+label-song-ellipsis = true
+
+bar-progress-width = 20
+bar-progress-indicator = 
+bar-progress-fill = _
+bar-progress-empty = _
+
+[module/cpu]
+type = internal/cpu
+interval = 2
+format-prefix = " "
+format-prefix-foreground = ${colors.foreground}
+format-underline = ${colors.grey}
+label = %percentage%%
+
+[module/memory]
+type = internal/memory
+interval = 2
+format-prefix = " "
+format-prefix-foreground = ${colors.foreground}
+format-underline = ${colors.grey}
+label = %percentage_used%%
+
+[module/eth]
+type = internal/network
+interface = enp30s0
+interval = 3.0
+
+format-connected-underline = ${colors.grey}
+format-connected-prefix = " "
+format-connected-prefix-foreground = ${colors.foreground}
+label-connected = %local_ip%
+
+[module/date]
+type = internal/date
+interval = 5
+
+date =
+date-alt = " %Y-%m-%d"
+
+time = %H:%M
+time-alt = %H:%M:%S
+
+format-prefix = 
+format-prefix-foreground = ${colors.foreground}
+format-underline = ${colors.grey}
+
+label = %date% %time%
+
+[module/volume]
+type = internal/volume
+
+format-volume = <label-volume> <bar-volume>
+label-volume = 
+label-volume-foreground = ${root.foreground}
+
+format-muted-prefix = " "
+format-muted-foreground = ${colors.foreground}
+label-muted = sound muted
+
+bar-volume-width = 10
+bar-volume-foreground-0 = ${colors.grey2}
+bar-volume-foreground-1 = ${colors.grey2}
+bar-volume-foreground-2 = ${colors.grey2}
+bar-volume-foreground-3 = ${colors.grey2}
+bar-volume-foreground-4 = ${colors.grey2}
+bar-volume-foreground-5 = ${colors.grey1}
+bar-volume-foreground-6 = ${colors.grey}
+bar-volume-gradient = false
+bar-volume-indicator = |
+bar-volume-indicator-font = 0
+bar-volume-fill = 
+bar-volume-fill-font = 1
+bar-volume-empty = 
+bar-volume-empty-font = 1
+bar-volume-empty-foreground = ${colors.foreground}
+
+[module/powermenu]
+type = custom/menu
+
+expand-right = true
+
+format-spacing = 1
+
+label-open = 
+label-open-foreground = ${colors.secondary}
+label-close =  cancel
+label-close-foreground = ${colors.secondary}
+label-separator = |
+label-separator-foreground = ${colors.foreground}
+
+menu-0-0 = reboot
+menu-0-0-exec = menu-open-1
+menu-0-1 = power off
+menu-0-1-exec = menu-open-2
+
+menu-1-0 = cancel
+menu-1-0-exec = menu-open-0
+menu-1-1 = reboot
+menu-1-1-exec = sudo reboot
+
+menu-2-0 = power off
+menu-2-0-exec = sudo poweroff
+menu-2-1 = cancel
+menu-2-1-exec = menu-open-0
+
+;compositing-background = xor
+;compositing-background = screen
+;compositing-foreground = source
+;compositing-border = over
+
+
+; vim:ft=dosini
