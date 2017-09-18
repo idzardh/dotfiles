@@ -54,7 +54,7 @@ main = do
 
 myStartupHook = do
   setWMName "LG3D"
-  spawn "$HOME/dotfiles/.config/polybar/launch.sh"
+  spawn "$HOME/dotfiles/.config/polybar/launch2.sh"
   spawn "dropbox"
 
 -- Variables
