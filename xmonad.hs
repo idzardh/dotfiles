@@ -145,8 +145,13 @@ myLogHook dbus = def
     , ppHidden = wrap " " " "
     , ppWsSep = ""
     , ppSep = " | "
-    , ppTitle = shorten 25
+    , ppTitle = myAddSpaces 25
     }
+
+myAddSpaces :: Int -> String -> String
+myAddSpaces len str = sstr ++ replicate (len - length sstr) ' '
+  where
+    sstr = shorten len str
 
 --TODO: addName?
 --TODO: move some programs automatically to workspaces
@@ -209,4 +214,4 @@ myConfig = def
     , normalBorderColor = gray
     , focusedBorderColor = pur2
     , workspaces = workspaces'
-, modMask = modMask' }
+    , modMask = modMask' }
