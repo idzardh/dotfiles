@@ -1,6 +1,4 @@
 
-; TODO: change example config to inherit from base
-
 [colors]
 background = #d0303030
 background-alt = #c0303030
@@ -71,48 +69,12 @@ tray-padding = 2
 tray-background = ${root.background}
 
 [bar/example]
+inherit = bar/base
 monitor = ${env:MONITOR:HDMI-A-1}
-width = 100%
-height = 28
-offset-x = 0
-offset-y = 0
-
-background = ${colors.background}
-foreground = ${colors.foreground}
-
-overline-size = 0
-underline-size = 0
-
-border-bottom-size = 0
-border-bottom-color = #ffffff
-
-spacing = 1
-padding-left = 0
-padding-right = 2
-module-margin-left = 1
-module-margin-right = 2
-
-font-0 = LiberationMono:fontformat=truetype:size=10:antialias=true;1
-font-1 = SpaceMono Nerd Font Mono:fontformat=truetype:size=16:antialias=true;3
-font-2 = SpaceMono Nerd Font Mono:pixelsize=10;1
-font-3 = Siji:fontformat=truetype:size=16:antialias=true;3
-
-radius = 0.0
-fixed-center = false
-
-line-size = 3
-line-color = #f00
-
-border-size = 0
-border-color = #00000000
 
 modules-left = xmonad
 modules-center = mpd
 modules-right = volume updates memory cpu date powermenu
-
-tray-position = right
-tray-padding = 2
-tray-background = ${root.background}
 
 [bar/laptop]
 inherit = bar/base
