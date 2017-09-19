@@ -15,6 +15,7 @@ import XMonad.Hooks.SetWMName
 
 import XMonad.Util.Run
 import XMonad.Util.EZConfig         ( additionalKeysP )
+import XMonad.Util.NamedActions
 
 import XMonad.Layout.IM
 import XMonad.Layout.LayoutModifier (ModifiedLayout(..))
@@ -52,10 +53,12 @@ main = do
         } `additionalKeysP` myAdditionalKeys
 
 
+-- TODO: make script that checks computer name, to correctly use the laptop or the pc version
 myStartupHook = do
   setWMName "LG3D"
-  spawn "$HOME/dotfiles/.config/polybar/launch.sh"
+  spawn "$HOME/dotfiles/.config/polybar/launch2.sh"
   spawn "dropbox"
+  spawn "nm-applet"
 
 -- Variables
 --------------------------------------------------------------------------------
@@ -146,7 +149,6 @@ myLogHook dbus = def
     }
 
 --TODO: addName?
---TODO: audio function keys
 --TODO: move some programs automatically to workspaces
 --TODO: split keys in different functionality (system, media, launchers)
 myAdditionalKeys =
@@ -166,6 +168,17 @@ myAdditionalKeys =
   , ("C-S--"        , spawn "pactl set-sink-volume 1 -5%")
   --, ("M-a"        , switchProjectPrompt)
   --, ("M-z"        , shiftToProjectPrompt)
+  -- F keys (meta function) -- brightness
+  , ("<XF86MonBrightnessUp>", spawn "xbacklight -inc 10")
+  , ("<XF86MonBrightnessDown>", spawn "xbacklight -dec 10")
+  -- mpc
+  , ("<XF86AudioPrev>", spawn "mpc prev")
+  , ("<XF86AudioNext>", spawn "mpc next")
+  , ("<XF86AudioPlay>", spawn "mpc toggle")
+  -- volume
+  , ("<XF86AudioRaiseVolume>", spawn "pactl set-sink-volume 1 +5%")
+  , ("<XF86AudioLowerVolume>", spawn "pactl set-sink-volume 1 -5%")
+  , ("<XF86AudioMute>", spawn "pactl set-sink-mute 1 toggle")
   ]
 
 -- Emit a DBus signal on log updates
