@@ -56,7 +56,7 @@ main = do
 -- TODO: make script that checks computer name, to correctly use the laptop or the pc version
 myStartupHook = do
   setWMName "LG3D"
-  spawn "$HOME/dotfiles/.config/polybar/launch2.sh"
+  spawn "$HOME/dotfiles/.config/polybar/launch.sh"
   spawn "dropbox"
   spawn "nm-applet"
 

@@ -7,6 +7,11 @@ killall -q polybar
 while pgrep -x polybar >/dev/null; do sleep 1; done
 
 # launch polybar
-polybar example &
+if [ "$(hostname)" = "pcgish" ]
+then
+  polybar desktop &
+else
+  polybar laptop &
+fi
 
 echo "Bars launched..."

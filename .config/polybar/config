@@ -67,7 +67,7 @@ tray-position = right
 tray-padding = 2
 tray-background = ${root.background}
 
-[bar/example]
+[bar/desktop]
 inherit = bar/base
 monitor = ${env:MONITOR:HDMI-A-1}
 
