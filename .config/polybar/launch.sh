@@ -11,6 +11,10 @@ if [ "$(hostname)" = "pcgish" ]
 then
   polybar desktop &
 else
+  if ! pgrep -x "nm-applet" >/dev/null
+  then
+    nm-applet &
+  fi
   polybar laptop &
 fi
 

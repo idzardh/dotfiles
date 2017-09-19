@@ -58,7 +58,6 @@ myStartupHook = do
   setWMName "LG3D"
   spawn "$HOME/dotfiles/.config/polybar/launch.sh"
   spawn "dropbox"
-  spawn "nm-applet"
 
 -- Variables
 --------------------------------------------------------------------------------
@@ -209,4 +208,4 @@ myConfig = def
     , normalBorderColor = gray
     , focusedBorderColor = pur2
     , workspaces = workspaces'
-, modMask = modMask' }
+    , modMask = modMask' }
