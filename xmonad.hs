@@ -1,10 +1,8 @@
 -- IMPORT                                                                    {{{
 --------------------------------------------------------------------------------
 import XMonad
-import XMonad.Actions.Navigation2D
-import XMonad.Actions.FloatKeys
-import XMonad.Actions.FloatSnap
-import XMonad.Actions.Submap
+import XMonad.Actions.DynamicProjects
+import XMonad.Actions.CycleWS
 
 import XMonad.Hooks.EwmhDesktops
 import XMonad.Hooks.DynamicLog
@@ -19,14 +17,14 @@ import XMonad.Util.Run
 import XMonad.Util.EZConfig
 import XMonad.Util.NamedActions
 
-import XMonad.Layout.IM
-import XMonad.Layout.LayoutModifier (ModifiedLayout(..))
 import XMonad.Layout.Minimize
 import XMonad.Layout.NoBorders
 import XMonad.Layout.Renamed
 import XMonad.Layout.Tabbed
 import XMonad.Layout.Spacing
 import XMonad.Layout.ThreeColumns
+
+import XMonad.Prompt
 
 import qualified XMonad.Layout.BoringWindows as B
 import qualified DBus as D
@@ -54,8 +52,7 @@ main = do
     [D.nameAllowReplacement, D.nameReplaceExisting, D.nameDoNotQueue]
 
   xmonad
-    -- $ dynamicProjects projects
-    $ withNavigation2DConfig defaultNavigation2DConfig
+    $ dynamicProjects projects
     $ withUrgencyHook NoUrgencyHook
     $ ewmh
     $ addDescrKeys ((myModMask, xK_F1), xMessage) myAdditionalKeys
@@ -66,7 +63,6 @@ main = do
 -- GLOBAL VARIABLES                                                          {{{
 --------------------------------------------------------------------------------
 -- General config
-
 myTerminal    = "tilix"
 myModMask     = mod4Mask
 myBorderWidth = 1
@@ -75,6 +71,7 @@ mySpacing :: Int
 mySpacing     = 5
 noSpacing :: Int
 noSpacing     = 0
+prompt = 20
 
 -- Colours
 fg        = "#ebdbb2"
@@ -93,8 +90,12 @@ yellow    = "#fabd2f"
 blue      = "#83a598"
 purple    = "#d3869b"
 aqua      = "#8ec07c"
+white     = "#eeeeee"
 
 pur2      = "#5b51c9"
+
+-- Font
+myFont = "xft:SpaceMono Nerd Font Mono:" ++ "fontformat=truetype:size=10:antialias=true"
 
 -----------------------------------------------------------------------------}}}
 -- LAYOUT                                                                    {{{
@@ -112,6 +113,34 @@ myLayouts = renamed [CutWordsLeft 2] $ spacing mySpacing $ renamed [CutWordsLeft
     aThreeColMid = renamed [Replace "3Col"] $ ThreeColMid 1 (3/100) (1/2)
 
 -----------------------------------------------------------------------------}}}
+-- THEMES                                                                    {{{
+--------------------------------------------------------------------------------
+-- Prompt themes
+myPromptTheme = def
+  { font              = myFont
+  , bgColor           = darkgreen
+  , fgColor           = white
+  , fgHLight          = white
+  , bgHLight          = pur2
+  , borderColor       = pur2
+  , promptBorderWidth = 0
+  , height            = prompt
+  , position          = Top
+  }
+
+warmPromptTheme = myPromptTheme
+  { bgColor           = yellow
+  , fgColor           = darkred
+  , position          = Top
+  }
+
+coldPromptTheme = myPromptTheme
+  { bgColor           = aqua
+  , fgColor           = darkgreen
+  , position          = Top
+  }
+
+-----------------------------------------------------------------------------}}}
 -- WORKSPACES                                                                {{{
 --------------------------------------------------------------------------------
 wsGEN = "\xf269"
@@ -121,8 +150,31 @@ wsMED = "\xf001"
 wsTMP = "\xf2db"
 wsGAM = "\xf11b"
 
-workspaces' :: [String]
-workspaces' = [wsGEN, wsWRK, wsSYS, wsMED, wsTMP, wsGAM, "7", "8", "9"]
+myWorkspaces :: [String]
+myWorkspaces = [wsGEN, wsWRK, wsSYS, wsMED, wsTMP, wsGAM, "7", "8", "9"]
+
+-----------------------------------------------------------------------------}}}
+-- PROJECTS                                                                  {{{
+--------------------------------------------------------------------------------
+projects :: [Project]
+projects =
+  [ Project { projectName      = "study"
+            , projectDirectory = "~/Documents/studie/master"
+            , projectStartHook = Just $ do spawn "tilix -e tmux"
+                                           spawn myTerminal
+            }
+  , Project { projectName      = "term"
+            , projectDirectory = "~/Documents/"
+            , projectStartHook = Just $ do spawn myBrowser
+                                           spawn myTerminal
+            }
+  , Project { projectName      = "program"
+            , projectDirectory = "~/Documents/program"
+            , projectStartHook = Just $ do spawn myBrowser
+                                           spawn "tilix -e tmux"
+            }
+
+  ]
 
 -----------------------------------------------------------------------------}}}
 -- KEYBINDINGS                                                               {{{
@@ -152,8 +204,10 @@ myWindowManagerKeys =
   , ("M-S-b"      , addName "1" $ incSpacing mySpacing)
   , ("M-v"        , addName "1" $ setSpacing mySpacing)
   , ("M-S-v"      , addName "1" $ incSpacing (-mySpacing))
-  --, ("M-a"        , switchProjectPrompt)
-  --, ("M-z"        , shiftToProjectPrompt)
+  , ("M-a"        , addName "1" $ switchProjectPrompt warmPromptTheme)
+  , ("M-S-a"      , addName "1" $ shiftToProjectPrompt coldPromptTheme)
+  , ("M-S-h"      , addName "2" $ moveTo Prev NonEmptyWS)
+  , ("M-S-l"      , addName "2" $ moveTo Next NonEmptyWS)
   ]
 
 myMediaKeys =
@@ -231,23 +285,23 @@ myStartupHook = do
 -- CONFIG                                                                    {{{
 --------------------------------------------------------------------------------
 myConfig = def
-    { terminal            = myTerminal
-    , layoutHook          = myLayouts
-    , manageHook          = placeHook(smart(0.5, 0.5))
-        <+> manageDocks
-        <+> myManageHook
-        <+> myManageHook'
-        <+> manageHook def
-    , handleEventHook     = docksEventHook
-        <+> minimizeEventHook
-        <+> fullscreenEventHook
-    , startupHook         = myStartupHook
-    , focusFollowsMouse   = False
-    , clickJustFocuses    = False
-    , borderWidth         = myBorderWidth
-    , normalBorderColor   = gray
-    , focusedBorderColor  = pur2
-    , workspaces          = workspaces'
-    , modMask             = myModMask
-    }
+  { terminal            = myTerminal
+  , layoutHook          = myLayouts
+  , manageHook          = placeHook(smart(0.5, 0.5))
+      <+> manageDocks
+      <+> myManageHook
+      <+> myManageHook'
+      <+> manageHook def
+  , handleEventHook     = docksEventHook
+      <+> minimizeEventHook
+      <+> fullscreenEventHook
+  , startupHook         = myStartupHook
+  , focusFollowsMouse   = False
+  , clickJustFocuses    = False
+  , borderWidth         = myBorderWidth
+  , normalBorderColor   = gray
+  , focusedBorderColor  = pur2
+  , workspaces          = myWorkspaces
+  , modMask             = myModMask
+  }
 -----------------------------------------------------------------------------}}}
