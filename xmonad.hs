@@ -144,8 +144,13 @@ myLogHook dbus = def
     , ppHidden = wrap " " " "
     , ppWsSep = ""
     , ppSep = " | "
-    , ppTitle = shorten 25
+    , ppTitle = myAddSpaces 25
     }
+
+myAddSpaces :: Int -> String -> String
+myAddSpaces len str = sstr ++ replicate (len - length sstr) ' '
+  where
+    sstr = shorten len str
 
 --TODO: addName?
 --TODO: move some programs automatically to workspaces
