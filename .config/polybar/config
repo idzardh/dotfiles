@@ -73,7 +73,7 @@ monitor = ${env:MONITOR:HDMI-A-1}
 
 modules-left = xmonad
 modules-center = mpd
-modules-right = volume updates memory cpu date powermenu
+modules-right = volume updates cpu memory date powermenu
 
 [bar/laptop]
 inherit = bar/base
