@@ -190,40 +190,40 @@ myAdditionalKeys c = (subtitle "Custom Keys":) $ mkNamedKeymap c $
   myProgramKeys ++ myWindowManagerKeys ++ myMediaKeys
 
 myProgramKeys =
-  [ ("M-z"        , addName "1" $ spawn "tilix -e calcurse")
-  , ("M-S-z"      , addName "2" $ spawn "~/dotfiles/scripts/lockscreen.sh")
-  , ("M-s"        , addName "3" $ spawn "steam")
-  , ("M-S-s"      , addName "4" $ spawn "systemctl suspend")
-  , ("M-f"        , addName "5" $ spawn myBrowser)
-  , ("M-g"        , addName "6" $ spawn myTerminal)
-  , ("M-S-g"      , addName "7" $ spawn "tilix -e vim ~/Documents/studie/master/afstudeeropdracht/notes/general.md")
+  [ ("M-z"        , addName "Open calendar & todo list" $ spawn "tilix -e calcurse")
+  , ("M-S-z"      , addName "Lock computer" $ spawn "~/dotfiles/scripts/lockscreen.sh")
+  , ("M-s"        , addName "Open Steam" $ spawn "steam")
+  , ("M-S-s"      , addName "Sleep" $ spawn "systemctl suspend")
+  , ("M-f"        , addName "Open firefox" $ spawn myBrowser)
+  , ("M-g"        , addName "Open terminal" $ spawn myTerminal)
+  , ("M-S-g"      , addName "Open notes for final assignment" $ spawn "tilix -e vim ~/Documents/studie/master/afstudeeropdracht/notes/general.md")
   ]
 
 myWindowManagerKeys =
-  [ ("M-b"        , addName "1" $ sendMessage ToggleStruts)
-  , ("M-S-b"      , addName "1" $ incSpacing mySpacing)
-  , ("M-v"        , addName "1" $ setSpacing mySpacing)
-  , ("M-S-v"      , addName "1" $ incSpacing (-mySpacing))
-  , ("M-a"        , addName "1" $ switchProjectPrompt warmPromptTheme)
-  , ("M-S-a"      , addName "1" $ shiftToProjectPrompt coldPromptTheme)
-  , ("M-S-h"      , addName "2" $ moveTo Prev NonEmptyWS)
-  , ("M-S-l"      , addName "2" $ moveTo Next NonEmptyWS)
+  [ ("M-b"        , addName "Do (not) respect polybar" $ sendMessage ToggleStruts)
+  , ("M-S-b"      , addName "Increase spacing between windows" $ incSpacing mySpacing)
+  , ("M-v"        , addName "Set default spacing between windows" $ setSpacing mySpacing)
+  , ("M-S-v"      , addName "Decrease spacing between windows" $ incSpacing (-mySpacing))
+  , ("M-a"        , addName "Switch view to project" $ switchProjectPrompt warmPromptTheme)
+  , ("M-S-a"      , addName "Send current window to project" $ shiftToProjectPrompt coldPromptTheme)
+  , ("M-S-h"      , addName "Move to previous non empty workspace" $ moveTo Prev NonEmptyWS)
+  , ("M-S-l"      , addName "Move to next non empty workspace" $ moveTo Next NonEmptyWS)
   ]
 
 myMediaKeys =
-  [ ("<XF86MonBrightnessUp>"   , addName "1" $ spawn "xbacklight -inc 10")
-  , ("<XF86MonBrightnessDown>" , addName "1" $ spawn "xbacklight -dec 10")
+  [ ("<XF86MonBrightnessUp>"   , addName "Increase backlight" $ spawn "xbacklight -inc 10")
+  , ("<XF86MonBrightnessDown>" , addName "Decrease backlight" $ spawn "xbacklight -dec 10")
   -- mpc
-  , ("<XF86AudioPrev>"         , addName "1" $ spawn "mpc prev")
-  , ("<XF86AudioNext>"         , addName "1" $ spawn "mpc next")
-  , ("<XF86AudioPlay>"         , addName "1" $ spawn "mpc toggle")
+  , ("<XF86AudioPrev>"         , addName "Previous track" $ spawn "mpc prev")
+  , ("<XF86AudioNext>"         , addName "Next track" $ spawn "mpc next")
+  , ("<XF86AudioPlay>"         , addName "Toggle play/pause" $ spawn "mpc toggle")
   -- volume
-  , ("<XF86AudioRaiseVolume>"  , addName "1" $ spawn "pactl set-sink-volume 1 +5%")
-  , ("<XF86AudioLowerVolume>"  , addName "1" $ spawn "pactl set-sink-volume 1 -5%")
-  , ("<XF86AudioMute>"         , addName "1" $ spawn "pactl set-sink-mute 1 toggle")
+  , ("<XF86AudioRaiseVolume>"  , addName "Raise volume" $ spawn "pactl set-sink-volume 1 +5%")
+  , ("<XF86AudioLowerVolume>"  , addName "Lower volume" $ spawn "pactl set-sink-volume 1 -5%")
+  , ("<XF86AudioMute>"         , addName "Toggle mute" $ spawn "pactl set-sink-mute 1 toggle")
   -- volume: for if meta keys are not available
-  , ("C-S-="                   , addName "1" $ spawn "pactl set-sink-volume 1 +5%")
-  , ("C-S--"                   , addName "test" $ spawn "pactl set-sink-volume 1 -5%")
+  , ("C-S-="                   , addName "Raise volume" $ spawn "pactl set-sink-volume 1 +5%")
+  , ("C-S--"                   , addName "Lower volume" $ spawn "pactl set-sink-volume 1 -5%")
   ]
 
 -----------------------------------------------------------------------------}}}
