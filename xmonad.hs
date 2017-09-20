@@ -1,8 +1,8 @@
+-- IMPORT                                                                    {{{
+--------------------------------------------------------------------------------
 import XMonad
-import XMonad.Actions.Navigation2D
-import XMonad.Actions.FloatKeys
-import XMonad.Actions.FloatSnap
-import XMonad.Actions.Submap
+import XMonad.Actions.DynamicProjects
+import XMonad.Actions.CycleWS
 
 import XMonad.Hooks.EwmhDesktops
 import XMonad.Hooks.DynamicLog
@@ -14,17 +14,17 @@ import XMonad.Hooks.Place
 import XMonad.Hooks.SetWMName
 
 import XMonad.Util.Run
-import XMonad.Util.EZConfig         ( additionalKeysP )
+import XMonad.Util.EZConfig
 import XMonad.Util.NamedActions
 
-import XMonad.Layout.IM
-import XMonad.Layout.LayoutModifier (ModifiedLayout(..))
 import XMonad.Layout.Minimize
 import XMonad.Layout.NoBorders
 import XMonad.Layout.Renamed
 import XMonad.Layout.Tabbed
 import XMonad.Layout.Spacing
 import XMonad.Layout.ThreeColumns
+
+import XMonad.Prompt
 
 import qualified XMonad.Layout.BoringWindows as B
 import qualified DBus as D
@@ -37,47 +37,43 @@ import qualified XMonad.StackSet as W
 import qualified Data.Map        as M
 import Data.Ratio ((%))
 
+import System.IO (hClose)
+
 import qualified Codec.Binary.UTF8.String as UTF8
 
+-----------------------------------------------------------------------------}}}
+-- MAIN                                                                      {{{
+--------------------------------------------------------------------------------
+--TODO: move some programs automatically to workspaces
 main :: IO ()
 main = do
   dbus <- D.connectSession
-  -- Request access to the DBus name
   D.requestName dbus (D.busName_ "org.xmonad.Log")
     [D.nameAllowReplacement, D.nameReplaceExisting, D.nameDoNotQueue]
-  xmonad . ewmh . withUrgencyHook NoUrgencyHook .
-    withNavigation2DConfig defaultNavigation2DConfig $
-      myConfig
-        { logHook = dynamicLogWithPP (myLogHook dbus)
-        , startupHook = myStartupHook
-        } `additionalKeysP` myAdditionalKeys
 
+  xmonad
+    $ dynamicProjects projects
+    $ withUrgencyHook NoUrgencyHook
+    $ ewmh
+    $ addDescrKeys ((myModMask, xK_F1), xMessage) myAdditionalKeys
+    -- $ addDescrKeys ((myModMask, xK_F1), showKeybindings) myAdditionalKeys
+    $ myConfig { logHook = dynamicLogWithPP (myLogHook dbus) }
 
-myStartupHook = do
-  setWMName "LG3D"
-  spawn "$HOME/dotfiles/.config/polybar/launch.sh"
-  spawn "dropbox"
-
--- Variables
+-----------------------------------------------------------------------------}}}
+-- GLOBAL VARIABLES                                                          {{{
 --------------------------------------------------------------------------------
-
+-- General config
 myTerminal    = "tilix"
 myModMask     = mod4Mask
 myBorderWidth = 1
-myLayout      = Tall 1 (3/100) (1/2)
 myBrowser     = "firefox"
-
 mySpacing :: Int
 mySpacing     = 5
 noSpacing :: Int
 noSpacing     = 0
+prompt = 20
 
-modMask' :: KeyMask
-modMask' = mod4Mask
-
-delta :: Rational
-delta = 3 / 100
-
+-- Colours
 fg        = "#ebdbb2"
 bg        = "#282828"
 gray      = "#a89984"
@@ -94,12 +90,16 @@ yellow    = "#fabd2f"
 blue      = "#83a598"
 purple    = "#d3869b"
 aqua      = "#8ec07c"
+white     = "#eeeeee"
 
 pur2      = "#5b51c9"
 
-myIM :: LayoutClass l a => l a -> ModifiedLayout AddRoster l a
-myIM = withIM (1 % 4) (ClassName "TelegramDesktop")
+-- Font
+myFont = "xft:SpaceMono Nerd Font Mono:" ++ "fontformat=truetype:size=10:antialias=true"
 
+-----------------------------------------------------------------------------}}}
+-- LAYOUT                                                                    {{{
+--------------------------------------------------------------------------------
 myLayouts = renamed [CutWordsLeft 2] $ spacing mySpacing $ renamed [CutWordsLeft 1] .
     avoidStruts . minimize . B.boringWindows $
     smartBorders
@@ -109,9 +109,40 @@ myLayouts = renamed [CutWordsLeft 2] $ spacing mySpacing $ renamed [CutWordsLeft
         )
   where
     aFullscreen = renamed [Replace "Full"] $ noBorders Full
-    aTiled = renamed [Replace "Main"] $ myIM $ Tall 1 (3/100) (1/2)
+    aTiled = renamed [Replace "Main"] $ Tall 1 (3/100) (1/2)
     aThreeColMid = renamed [Replace "3Col"] $ ThreeColMid 1 (3/100) (1/2)
 
+-----------------------------------------------------------------------------}}}
+-- THEMES                                                                    {{{
+--------------------------------------------------------------------------------
+-- Prompt themes
+myPromptTheme = def
+  { font              = myFont
+  , bgColor           = darkgreen
+  , fgColor           = white
+  , fgHLight          = white
+  , bgHLight          = pur2
+  , borderColor       = pur2
+  , promptBorderWidth = 0
+  , height            = prompt
+  , position          = Top
+  }
+
+warmPromptTheme = myPromptTheme
+  { bgColor           = yellow
+  , fgColor           = darkred
+  , position          = Top
+  }
+
+coldPromptTheme = myPromptTheme
+  { bgColor           = aqua
+  , fgColor           = darkgreen
+  , position          = Top
+  }
+
+-----------------------------------------------------------------------------}}}
+-- WORKSPACES                                                                {{{
+--------------------------------------------------------------------------------
 wsGEN = "\xf269"
 wsWRK = "\xf02d"
 wsSYS = "\xf300"
@@ -119,21 +150,100 @@ wsMED = "\xf001"
 wsTMP = "\xf2db"
 wsGAM = "\xf11b"
 
-workspaces' :: [String]
-workspaces' = [wsGEN, wsWRK, wsSYS, wsMED, wsTMP, wsGAM, "7", "8", "9"]
+myWorkspaces :: [String]
+myWorkspaces = [wsGEN, wsWRK, wsSYS, wsMED, wsTMP, wsGAM, "7", "8", "9"]
 
+-----------------------------------------------------------------------------}}}
+-- PROJECTS                                                                  {{{
+--------------------------------------------------------------------------------
+projects :: [Project]
+projects =
+  [ Project { projectName      = "study"
+            , projectDirectory = "~/Documents/studie/master"
+            , projectStartHook = Just $ do spawn "tilix -e tmux"
+                                           spawn myTerminal
+            }
+  , Project { projectName      = "term"
+            , projectDirectory = "~/Documents/"
+            , projectStartHook = Just $ do spawn myBrowser
+                                           spawn myTerminal
+            }
+  , Project { projectName      = "program"
+            , projectDirectory = "~/Documents/program"
+            , projectStartHook = Just $ do spawn myBrowser
+                                           spawn "tilix -e tmux"
+            }
+
+  ]
+
+-----------------------------------------------------------------------------}}}
+-- KEYBINDINGS                                                               {{{
+--------------------------------------------------------------------------------
+showKeybindings :: [((KeyMask, KeySym), NamedAction)] -> NamedAction
+showKeybindings x = addName "Show Keybindings" $ io $ do
+  h <- spawnPipe "zenity --text-info --font=adobe courier"
+  hPutStr h (unlines $ showKm x)
+  hClose h
+  return ()
+
+myAdditionalKeys c = (subtitle "Custom Keys":) $ mkNamedKeymap c $
+  myProgramKeys ++ myWindowManagerKeys ++ myMediaKeys
+
+myProgramKeys =
+  [ ("M-z"        , addName "Open calendar & todo list" $ spawn "tilix -e calcurse")
+  , ("M-S-z"      , addName "Lock computer" $ spawn "~/dotfiles/scripts/lockscreen.sh")
+  , ("M-s"        , addName "Open Steam" $ spawn "steam")
+  , ("M-S-s"      , addName "Sleep" $ spawn "systemctl suspend")
+  , ("M-f"        , addName "Open firefox" $ spawn myBrowser)
+  , ("M-g"        , addName "Open terminal" $ spawn myTerminal)
+  , ("M-S-g"      , addName "Open notes for final assignment" $ spawn "tilix -e vim ~/Documents/studie/master/afstudeeropdracht/notes/general.md")
+  ]
+
+myWindowManagerKeys =
+  [ ("M-b"        , addName "Do (not) respect polybar" $ sendMessage ToggleStruts)
+  , ("M-S-b"      , addName "Increase spacing between windows" $ incSpacing mySpacing)
+  , ("M-v"        , addName "Set default spacing between windows" $ setSpacing mySpacing)
+  , ("M-S-v"      , addName "Decrease spacing between windows" $ incSpacing (-mySpacing))
+  , ("M-a"        , addName "Switch view to project" $ switchProjectPrompt warmPromptTheme)
+  , ("M-S-a"      , addName "Send current window to project" $ shiftToProjectPrompt coldPromptTheme)
+  , ("M-S-h"      , addName "Move to previous non empty workspace" $ moveTo Prev NonEmptyWS)
+  , ("M-S-l"      , addName "Move to next non empty workspace" $ moveTo Next NonEmptyWS)
+  ]
+
+myMediaKeys =
+  [ ("<XF86MonBrightnessUp>"   , addName "Increase backlight" $ spawn "xbacklight -inc 10")
+  , ("<XF86MonBrightnessDown>" , addName "Decrease backlight" $ spawn "xbacklight -dec 10")
+  -- mpc
+  , ("<XF86AudioPrev>"         , addName "Previous track" $ spawn "mpc prev")
+  , ("<XF86AudioNext>"         , addName "Next track" $ spawn "mpc next")
+  , ("<XF86AudioPlay>"         , addName "Toggle play/pause" $ spawn "mpc toggle")
+  -- volume
+  , ("<XF86AudioRaiseVolume>"  , addName "Raise volume" $ spawn "pactl set-sink-volume 1 +5%")
+  , ("<XF86AudioLowerVolume>"  , addName "Lower volume" $ spawn "pactl set-sink-volume 1 -5%")
+  , ("<XF86AudioMute>"         , addName "Toggle mute" $ spawn "pactl set-sink-mute 1 toggle")
+  -- volume: for if meta keys are not available
+  , ("C-S-="                   , addName "Raise volume" $ spawn "pactl set-sink-volume 1 +5%")
+  , ("C-S--"                   , addName "Lower volume" $ spawn "pactl set-sink-volume 1 -5%")
+  ]
+
+-----------------------------------------------------------------------------}}}
+-- MANAGEHOOK                                                                {{{
+--------------------------------------------------------------------------------
 myManageHook = composeAll
     [ className =? "MPlayer"          --> doFloat
     , className =? "Gimp"             --> doFloat
     , resource  =? "desktop_window"   --> doIgnore
     , className =? "feh"              --> doFloat
     , className =? "Gpick"            --> doFloat
-    , role =? "pop-up"                --> doFloat ]
+    , role      =? "pop-up"           --> doFloat ]
   where
     role = stringProperty "WM_WINDOW_ROLE"
 
 myManageHook' = composeOne [ isFullscreen -?> doFullFloat ]
 
+-----------------------------------------------------------------------------}}}
+-- LOGHOOK                                                                   {{{
+--------------------------------------------------------------------------------
 myLogHook :: D.Client -> PP
 myLogHook dbus = def
     { ppOutput = dbusOutput dbus
@@ -143,41 +253,8 @@ myLogHook dbus = def
     , ppHidden = wrap " " " "
     , ppWsSep = ""
     , ppSep = " | "
-    , ppTitle = shorten 25
+    , ppTitle = myAddSpaces 25
     }
-
---TODO: addName?
---TODO: move some programs automatically to workspaces
---TODO: split keys in different functionality (system, media, launchers)
-myAdditionalKeys =
-  [ ("M-z"        , spawn "tilix -e calcurse")
-  , ("M-S-z"      , spawn "~/dotfiles/scripts/lockscreen.sh")
-  , ("M-s"        , spawn "steam")
-  , ("M-S-s"      , spawn "systemctl suspend")
-  , ("M-b"        , sendMessage ToggleStruts)
-  , ("M-S-b"      , incSpacing mySpacing)
-  , ("M-v"        , setSpacing mySpacing)
-  , ("M-S-v"      , incSpacing (-mySpacing))
-  , ("M-f"        , spawn myBrowser)
-  , ("M-g"        , spawn myTerminal)
-  , ("M-S-g"      , spawn "tilix -e vim ~/Documents/studie/master/afstudeeropdracht/notes/general.md")
-  -- control key binds
-  , ("C-S-="        , spawn "pactl set-sink-volume 1 +5%")
-  , ("C-S--"        , spawn "pactl set-sink-volume 1 -5%")
-  --, ("M-a"        , switchProjectPrompt)
-  --, ("M-z"        , shiftToProjectPrompt)
-  -- F keys (meta function) -- brightness
-  , ("<XF86MonBrightnessUp>", spawn "xbacklight -inc 10")
-  , ("<XF86MonBrightnessDown>", spawn "xbacklight -dec 10")
-  -- mpc
-  , ("<XF86AudioPrev>", spawn "mpc prev")
-  , ("<XF86AudioNext>", spawn "mpc next")
-  , ("<XF86AudioPlay>", spawn "mpc toggle")
-  -- volume
-  , ("<XF86AudioRaiseVolume>", spawn "pactl set-sink-volume 1 +5%")
-  , ("<XF86AudioLowerVolume>", spawn "pactl set-sink-volume 1 -5%")
-  , ("<XF86AudioMute>", spawn "pactl set-sink-mute 1 toggle")
-  ]
 
 -- Emit a DBus signal on log updates
 dbusOutput :: D.Client -> String -> IO ()
@@ -191,20 +268,40 @@ dbusOutput dbus str = do
     interfaceName = D.interfaceName_ "org.xmonad.Log"
     memberName = D.memberName_ "Update"
 
+myAddSpaces :: Int -> String -> String
+myAddSpaces len str = sstr ++ replicate (len - length sstr) ' '
+  where
+    sstr = shorten len str
+
+-----------------------------------------------------------------------------}}}
+-- STARTUPHOOK                                                               {{{
+--------------------------------------------------------------------------------
+myStartupHook = do
+  setWMName "LG3D"
+  spawn "$HOME/dotfiles/.config/polybar/launch.sh"
+  spawn "dropbox"
+
+-----------------------------------------------------------------------------}}}
+-- CONFIG                                                                    {{{
+--------------------------------------------------------------------------------
 myConfig = def
-    { terminal = "tilix"
-    , layoutHook = myLayouts
-    , manageHook = placeHook (smart (0.5, 0.5))
-                    <+> manageDocks
-                    <+> myManageHook
-                    <+> myManageHook'
-                    <+> manageHook def
-    , handleEventHook = docksEventHook <+> minimizeEventHook <+> fullscreenEventHook
-    -- Don't be stupid with focus
-    , focusFollowsMouse = False
-    , clickJustFocuses = False
-    , borderWidth = myBorderWidth
-    , normalBorderColor = gray
-    , focusedBorderColor = pur2
-    , workspaces = workspaces'
-    , modMask = modMask' }
+  { terminal            = myTerminal
+  , layoutHook          = myLayouts
+  , manageHook          = placeHook(smart(0.5, 0.5))
+      <+> manageDocks
+      <+> myManageHook
+      <+> myManageHook'
+      <+> manageHook def
+  , handleEventHook     = docksEventHook
+      <+> minimizeEventHook
+      <+> fullscreenEventHook
+  , startupHook         = myStartupHook
+  , focusFollowsMouse   = False
+  , clickJustFocuses    = False
+  , borderWidth         = myBorderWidth
+  , normalBorderColor   = gray
+  , focusedBorderColor  = pur2
+  , workspaces          = myWorkspaces
+  , modMask             = myModMask
+  }
+-----------------------------------------------------------------------------}}}
