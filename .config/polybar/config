@@ -1,6 +1,7 @@
 
 [colors]
 background = #d0303030
+background-transparent = #00303030
 background-alt = #c0303030
 foreground = #eeeeee
 foreground-alt = #c1c2c3
@@ -13,6 +14,8 @@ purple = #d3869b
 aqua = #8ec07c
 orange = #fe8019
 white = #dddddd
+
+blue_arch = #83afe1
 
 grey = #5b51c9
 grey1 = #5bb1c9
@@ -35,7 +38,7 @@ height = 28
 offset-x = 0
 offset-y = 0
 
-background = ${colors.background}
+background = ${colors.background-transparent}
 foreground = ${colors.foreground}
 
 overline-size = 0
@@ -125,7 +128,7 @@ type = custom/script
 exec = $HOME/dotfiles/scripts/updates.sh
 
 format-prefix = "%{T2}%{T-} "
-format-prefix-foreground = ${colors.foreground}
+format-prefix-foreground = ${colors.blue_arch}
 format-underline = ${colors.grey}
 
 interval = 120

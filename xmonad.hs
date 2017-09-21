@@ -93,6 +93,7 @@ aqua      = "#8ec07c"
 white     = "#eeeeee"
 
 pur2      = "#5b51c9"
+blue2     = "#2266d0"
 
 -- Font
 myFont = "xft:SpaceMono Nerd Font Mono:" ++ "fontformat=truetype:size=10:antialias=true"
@@ -204,8 +205,8 @@ myWindowManagerKeys =
   , ("M-S-b"      , addName "Increase spacing between windows" $ incSpacing mySpacing)
   , ("M-v"        , addName "Set default spacing between windows" $ setSpacing mySpacing)
   , ("M-S-v"      , addName "Decrease spacing between windows" $ incSpacing (-mySpacing))
-  , ("M-a"        , addName "Switch view to project" $ switchProjectPrompt warmPromptTheme)
-  , ("M-S-a"      , addName "Send current window to project" $ shiftToProjectPrompt coldPromptTheme)
+  , ("M-u"        , addName "Switch view to project" $ switchProjectPrompt warmPromptTheme)
+  , ("M-S-u"      , addName "Send current window to project" $ shiftToProjectPrompt coldPromptTheme)
   , ("M-S-h"      , addName "Move to previous non empty workspace" $ moveTo Prev NonEmptyWS)
   , ("M-S-l"      , addName "Move to next non empty workspace" $ moveTo Next NonEmptyWS)
   ]
@@ -247,7 +248,7 @@ myManageHook' = composeOne [ isFullscreen -?> doFullFloat ]
 myLogHook :: D.Client -> PP
 myLogHook dbus = def
     { ppOutput = dbusOutput dbus
-    , ppCurrent = wrap ("%{F" ++ blue ++ "} ") " %{F-}"
+    , ppCurrent = wrap ("%{F" ++ blue2 ++ "} ") " %{F-}"
     , ppVisible = wrap ("%{B" ++ bg1 ++ "} ") " %{B-}"
     , ppUrgent = wrap ("%{F" ++ red ++ "} ") " %{F-}"
     , ppHidden = wrap " " " "
