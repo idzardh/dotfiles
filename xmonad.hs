@@ -247,7 +247,7 @@ myManageHook' = composeOne [ isFullscreen -?> doFullFloat ]
 myLogHook :: D.Client -> PP
 myLogHook dbus = def
     { ppOutput = dbusOutput dbus
-    , ppCurrent = wrap ("%{B" ++ bg2 ++ "} ") " %{B-}"
+    , ppCurrent = wrap ("%{F" ++ blue ++ "} ") " %{F-}"
     , ppVisible = wrap ("%{B" ++ bg1 ++ "} ") " %{B-}"
     , ppUrgent = wrap ("%{F" ++ red ++ "} ") " %{F-}"
     , ppHidden = wrap " " " "
