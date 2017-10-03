@@ -81,10 +81,11 @@ modules-right = volume updates cpu memory date powermenu
 [bar/laptop]
 inherit = bar/base
 monitor = ${env:MONITOR:eDP1}
+monitor-fallback = ${env:MONITOR:HDMI1}
 
 modules-left = xmonad
 modules-center = mpd volume
-modules-right = backlight battery updates cpu memory date powermenu
+modules-right = updates battery backlight date powermenu
 
 [module/xmonad]
 type = custom/script
@@ -233,8 +234,8 @@ label = %date% %time%
 [module/volume]
 type = internal/volume
 
-format-volume = <label-volume> <bar-volume>
-label-volume = 
+format-volume = <label-volume>
+label-volume =  %percentage%%
 label-volume-foreground = ${root.foreground}
 
 format-muted-prefix = " "
