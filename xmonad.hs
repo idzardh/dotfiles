@@ -71,7 +71,7 @@ mySpacing :: Int
 mySpacing     = 5
 noSpacing :: Int
 noSpacing     = 0
-prompt = 20
+prompt        = 20
 
 -- Colours
 fg        = "#ebdbb2"
@@ -101,7 +101,7 @@ myFont = "xft:SpaceMono Nerd Font Mono:" ++ "fontformat=truetype:size=10:antiali
 -----------------------------------------------------------------------------}}}
 -- LAYOUT                                                                    {{{
 --------------------------------------------------------------------------------
-myLayouts = renamed [CutWordsLeft 2] $ spacing mySpacing $ renamed [CutWordsLeft 1] .
+myLayouts = renamed [CutWordsLeft 1] .
     avoidStruts . minimize . B.boringWindows $
     smartBorders
         ( aTiled
@@ -109,9 +109,9 @@ myLayouts = renamed [CutWordsLeft 2] $ spacing mySpacing $ renamed [CutWordsLeft
         ||| aThreeColMid
         )
   where
-    aFullscreen = renamed [Replace "Full"] $ noBorders Full
-    aTiled = renamed [Replace "Main"] $ Tall 1 (3/100) (1/2)
-    aThreeColMid = renamed [Replace "3Col"] $ ThreeColMid 1 (3/100) (1/2)
+    aFullscreen = renamed [Replace "Full"] $ spacing 0 $ noBorders Full
+    aTiled = renamed [Replace "Main"] $ spacing mySpacing $ Tall 1 (3/100) (1/2)
+    aThreeColMid = renamed [Replace "3Col"] $ spacing mySpacing $ ThreeColMid 1 (3/100) (1/2)
 
 -----------------------------------------------------------------------------}}}
 -- THEMES                                                                    {{{
@@ -173,6 +173,13 @@ projects =
             , projectDirectory = "~/Documents/program"
             , projectStartHook = Just $ do spawn myBrowser
                                            spawn "tilix -e tmux"
+            }
+  , Project { projectName      = "system"
+            , projectDirectory = "~/Documents/"
+            , projectStartHook = Just $ do spawn "tilix -e calcurse"
+                                           spawn "tilix -e ncmpcpp"
+                                           spawn "tilix -e ncmpcpp"
+                                           spawn "tilix -e htop"
             }
 
   ]
@@ -249,7 +256,7 @@ myLogHook :: D.Client -> PP
 myLogHook dbus = def
     { ppOutput = dbusOutput dbus
     , ppCurrent = wrap ("%{F" ++ blue2 ++ "} ") " %{F-}"
-    , ppVisible = wrap ("%{B" ++ bg1 ++ "} ") " %{B-}"
+    , ppVisible = wrap ("%{F" ++ blue ++ "} ") " %{F-}"
     , ppUrgent = wrap ("%{F" ++ red ++ "} ") " %{F-}"
     , ppHidden = wrap " " " "
     , ppWsSep = ""
@@ -300,7 +307,7 @@ myConfig = def
   , focusFollowsMouse   = False
   , clickJustFocuses    = False
   , borderWidth         = myBorderWidth
-  , normalBorderColor   = gray
+  , normalBorderColor   = bg
   , focusedBorderColor  = pur2
   , workspaces          = myWorkspaces
   , modMask             = myModMask
