@@ -17,6 +17,9 @@ Plugin 'VundleVim/Vundle.vim'
 Plugin 'vim-airline/vim-airline'
 Plugin 'vim-airline/vim-airline-themes'
 
+" Nord theme
+Plugin 'arcticicestudio/nord-vim'
+
 " Show matching parentheses
 Plugin 'kien/rainbow_parentheses.vim'
 
@@ -25,26 +28,23 @@ Plugin 'scrooloose/nerdtree'
 Plugin 'Xuyuanp/nerdtree-git-plugin'
 Plugin 'tiagofumo/vim-nerdtree-syntax-highlight'
 
+" git show additions compared to staged
+Plugin 'airblade/vim-gitgutter'
+
+" Git plugin
+Plugin 'tpope/vim-fugitive'
+
 " vim projectionist
 Plugin 'tpope/vim-projectionist'
 
 " Zeal browser
 Plugin 'KabbAmine/zeavim.vim'
 
-" git show additions compared to staged
-Plugin 'airblade/vim-gitgutter'
-
 " Ctags sidebar
 Plugin 'majutsushi/tagbar'
 
 " closing brackets
 Plugin 'cohama/lexima.vim'
-
-" quickrun
-Plugin 'thinca/vim-quickrun'
-
-" Git plugin
-Plugin 'tpope/vim-fugitive'
 
 " Surround with ' " or (
 Plugin 'tpope/vim-surround'
@@ -67,6 +67,9 @@ source /usr/share/vim/vimfiles/plugin/youcompleteme.vim
 " Comment plugin
 Plugin 'tpope/vim-commentary'
 
+" pdf viewer
+Plugin 'xuhdev/vim-latex-live-preview'
+
 " fancy icons
 Plugin 'ryanoasis/vim-devicons'
 
@@ -78,9 +81,8 @@ filetype plugin indent on
 
 " 3. Plugin Settings {{{
 " Airline settings {{{
-" let g:airline_theme='behelit'
-let g:airline_theme='luna'
-let g:airline#extensions#tabline#enabled = 1
+let g:airline_theme='nord'
+let g:airline#extensions#tabline#enabled = 0
 let g:airline_powerline_fonts = 1
 
 let g:WebDevIconsUnicodeDecorateFolderNodes = 1
@@ -92,8 +94,8 @@ set noshowmode
 " }}}
 
 " NERDTree settings {{{
-autocmd StdinReadPre * let s:std_in=1
-autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
+" autocmd StdinReadPre * let s:std_in=1
+" autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 
 let NERDTreeMinimalUI = 1
@@ -104,7 +106,7 @@ autocmd FileType nerdtree setlocal nolist
 
 " space config
 if !exists('g:airline_symbols')
-  let g:airline_symbols = {}
+	let g:airline_symbols = {}
 endif
 let g:airline_symbols.space = "\ua0"
 
@@ -120,12 +122,15 @@ let g:NERDTreeFileExtensionHighlightFullName = 1
 let g:NERDTreeExactMatchHighlightFullName = 1
 let g:NERDTreePatternMatchHighlightFullName = 1
 
-let s:lightGreen = '31B53E'
-let s:darkOrange = 'F16529'
+let s:lightGreen = 'AEC6CF'
+let s:darkOrange = '88BE95'
 
 let g:NERDTreeExtensionHighlightColor = {} " needed
 let g:NERDTreeExtensionHighlightColor['tex'] = s:lightGreen
 let g:NERDTreeExtensionHighlightColor['pdf'] = s:darkOrange
+
+" let nerdtree use netrw
+let NERDTreeHijackNetrw=1
 " }}}
 
 " vim-projectionist {{{
@@ -151,23 +156,23 @@ let g:ycm_extra_conf_globlist = ['~/dev/*','!~/*']
 
 " rainbow parentheses {{{
 let g:rbpt_colorpairs = [
-    \ ['brown',       'RoyalBlue3'],
-    \ ['Darkblue',    'SeaGreen3'],
-    \ ['darkgreen',   'firebrick3'],
-    \ ['darkcyan',    'RoyalBlue3'],
-    \ ['darkred',     'SeaGreen3'],
-    \ ['darkmagenta', 'DarkOrchid3'],
-    \ ['gray',        'RoyalBlue3'],
-    \ ['darkred',     'DarkOrchid3'],
-    \ ['black',       'SeaGreen3'],
-    \ ['red',         'firebrick3'],
-    \ ['darkmagenta', 'DarkOrchid3'],
-    \ ['darkgray',    'DarkOrchid3'],
-    \ ['Darkblue',    'firebrick3'],
-    \ ['brown',       'firebrick3'],
-    \ ['darkgreen',   'RoyalBlue3'],
-    \ ['darkcyan',    'SeaGreen3'],
-    \ ]
+		\ ['brown',       'RoyalBlue3'],
+		\ ['Darkblue',    'SeaGreen3'],
+		\ ['darkgreen',   'firebrick3'],
+		\ ['darkcyan',    'RoyalBlue3'],
+		\ ['darkred',     'SeaGreen3'],
+		\ ['darkmagenta', 'DarkOrchid3'],
+		\ ['gray',        'RoyalBlue3'],
+		\ ['darkred',     'DarkOrchid3'],
+		\ ['black',       'SeaGreen3'],
+		\ ['red',         'firebrick3'],
+		\ ['darkmagenta', 'DarkOrchid3'],
+		\ ['darkgray',    'DarkOrchid3'],
+		\ ['Darkblue',    'firebrick3'],
+		\ ['brown',       'firebrick3'],
+		\ ['darkgreen',   'RoyalBlue3'],
+		\ ['darkcyan',    'SeaGreen3'],
+		\ ]
 
 let g:rbpt_max = 16
 let g:rbpt_loadcmd_toggle = 0
@@ -180,10 +185,8 @@ au Syntax * RainbowParenthesesLoadChevrons
 
 " }}}
 
-" zeavim {{{
-let g:zv_file_types = {
-  \ 'cpp' : 'cpp'
-  \ }
+" latex preview {{{
+let g:livepreview_previewer = 'evince'
 " }}}
 
 "}}}
@@ -193,15 +196,14 @@ set nowrap
 set linebreak
 set showcmd
 syntax on
-set cursorline
 set incsearch
 set hlsearch
 set ignorecase
 set smartcase
 set lazyredraw
 set encoding=utf-8
-"set textwidth=80
-set list
+" set textwidth=80
+" set list
 set listchars=trail:ᚲ,eol:¬,extends:⟩,precedes:⟨,tab:►\ 
 set t_Co=256
 set splitright
@@ -245,7 +247,7 @@ set path+=../include/
 "  au FileType h setlocal foldlevelstart=3
 "augroup END
 
-colorscheme default
+colorscheme slate
 "desert
 
 hi Normal ctermbg=NONE
@@ -357,27 +359,18 @@ nnoremap <silent> <leader>W :set wrap!<cr>
 "switch folds
 nnoremap <leader>a za
 nnoremap <leader>A zMzvzz
-" highlight interesting words without searching
-nnoremap <silent> <leader>1 :call HiInterestingWord(1)<cr>
-nnoremap <silent> <leader>2 :call HiInterestingWord(2)<cr>
-nnoremap <silent> <leader>3 :call HiInterestingWord(3)<cr>
-nnoremap <silent> <leader>4 :call HiInterestingWord(4)<cr>
-nnoremap <silent> <leader>5 :call HiInterestingWord(5)<cr>
-nnoremap <silent> <leader>6 :call HiInterestingWord(6)<cr>
 " toggle invisible characters
 nnoremap <silent> <leader>i :set list!<cr>
 " toggle NERDTree
-nnoremap <silent> <leader>f :NERDTreeToggle<cr>
+nnoremap <silent> <leader>f :e .<cr>
 " find current file in NERDTree
-nnoremap <silent> <leader>F :NERDTreeFind<cr>
+nnoremap <silent> <leader>F :vsp .<cr>
 " open tagbar
 nnoremap <silent> <leader>t :TagbarToggle<cr>
-" quickrun
-nnoremap <silent> <leader>r :QuickRun<cr>
 " }}}
 
 " Double character {{{
-" do not use: ' " a b fF h i j k l r t v wW z 0 1 2 3 4 5 6
+" do not use: ' " a b fF h i j k l t v wW z 0 1 2 3 4 5 6
 " edit vimrc
 nnoremap <silent> <leader>ev :vsplit ~/dotfiles/globalvim.vim<cr>
 nnoremap <silent> <leader>sv :source $MYVIMRC<cr>
@@ -400,56 +393,36 @@ nnoremap <leader>ss :setlocal spell!<cr>
 " 10. Line Settings {{{
 set number         "show line numbers
 set relativenumber "show linenumbers relative to current line
+set cursorline
+
+highlight LineNr ctermfg=darkgrey
+highlight CursorLineNr ctermfg=grey
+highlight EndOfBuffer ctermfg=grey
+
+augroup CursorLine
+	au!
+	au VimEnter,WinEnter,BufWinEnter * setlocal cursorline
+	au WinLeave * setlocal nocursorline
+augroup END
 
 function! NumberToggle()
-  if(&relativenumber == 1)
-    set norelativenumber
-  else
-    set relativenumber
-  endif
+	if(&relativenumber == 1)
+		set norelativenumber
+	else
+		set relativenumber
+	endif
 endfunc
 
 autocmd InsertEnter * :set norelativenumber
 autocmd InsertLeave * :set relativenumber
 
-au FocusLost * :set norelativenumber
-au FocusGained * :set relativenumber
-
 " lines that exceed length 80 are marked
-highlight ColorColumn ctermbg=magenta
-call matchadd('ColorColumn','\%82v',100)
+highlight ColorColumn ctermbg=darkgrey
+call matchadd('ColorColumn','\%82v', 100)
 
 " }}}
 
-" 11. Highlight function {{{
-function! HiInterestingWord(n)
-  " save the location
-  normal! mz
-  " yank the current word into the z register
-  normal! "zyiw
-  " calculate an arbitrary match ID (hope nobody else is using it)
-  let mid = 86750 + a:n
-  " clear existing matches, but don't worry if they don't exist
-  silent! call matchdelete(mid)
-  " construct a literal pattern that has to match at boundaries
-  let pat = '\V\<' . escape(@z, '\') . '\>'
-  " actually match the words
-  call matchadd("InterestingWord" . a:n, pat, 1, mid)
-  " move back to the original location
-  normal! `z
-endfunction
-
-" default Highlights
-hi def InterestingWord1 guifg=#000000 ctermfg=16 guibg=#ffa724 ctermbg=214
-hi def InterestingWord2 guifg=#000000 ctermfg=16 guibg=#aeee00 ctermbg=154
-hi def InterestingWord3 guifg=#000000 ctermfg=16 guibg=#8cffba ctermbg=121
-hi def InterestingWord4 guifg=#000000 ctermfg=16 guibg=#b88853 ctermbg=137
-hi def InterestingWord5 guifg=#000000 ctermfg=16 guibg=#ff9eb8 ctermbg=211
-hi def InterestingWord6 guifg=#000000 ctermfg=16 guibg=#ff2c4b ctermbg=195
-
-" }}}
-
-" 12. Latex bindings {{{
+" 11. Latex bindings {{{
 " find next <++> for custom Latex editing and enable spell check
 autocmd FileType tex,plaintex inoremap <leader><space> <esc>/<++><cr>"_c4l
 autocmd FileType tex,plaintex setlocal spell
@@ -491,7 +464,7 @@ autocmd FileType tex,plaintex inoremap ;ree equation~\eqref{eq:}<++><esc>F:a
 " type ;res to automatically make a ref to a section
 autocmd FileType tex,plaintex inoremap ;res section~\ref{sec:}<++><esc>F:a
 " type ;rec to automatically make a ref to a chapter
-autocmd FileType tex,plaintex inoremap ;rec chapter~\ref{sec:}<++><esc>F:a
+autocmd FileType tex,plaintex inoremap ;rec chapter~\ref{cha:}<++><esc>F:a
 " type ;la to automatically make a label
 autocmd FileType tex,plaintex inoremap ;lab \label{}<++><esc>F{a
 " }}}
@@ -521,31 +494,31 @@ autocmd FileType tex,plaintex inoremap ;ros \ac{ROS}
 " }}}
 " }}}
 
-" 13. Cpp bindings {{{
+" 12. Cpp bindings {{{
 " find next <++> for custom cpp editing
 autocmd FileType h,cpp inoremap <leader><space> <esc>/<++><cr>"_c4l
 " make ;class class<space><cr>{<cr>public:<cr>private:<cr><++><cr>};<esc>5kA
 autocmd FileType h,cpp inoremap <silent> ;class <esc>:call MakeClass()<cr>i
 " def MakeClass {{{
 function! MakeClass()
-  call inputsave()
-  " ask the user for class name and base class name
-  let classname = input('Enter Class Name: ')
-  " TODO: give a boolean (y/n) question to check derived/virtual
-  " TODO: check if first letter is capital
-  call inputrestore()
-  call setline('.','class ' . classname)
-  execute "normal! o{"
-  execute "normal! opublic:"
-  execute "normal! o"
-  call setline('.', '		' . classname . '();')
-  execute "normal! o"
-  call setline('.', '		virtual ~' . classname . '();')
-  execute "normal! o"
-  execute "normal! oprivate:"
-  execute "normal! o"
-  execute "normal! o};"
-  execute "normal! k"
+	call inputsave()
+	" ask the user for class name and base class name
+	let classname = input('Enter Class Name: ')
+	" TODO: give a boolean (y/n) question to check derived/virtual
+	" TODO: check if first letter is capital
+	call inputrestore()
+	call setline('.','class ' . classname)
+	execute "normal! o{"
+	execute "normal! opublic:"
+	execute "normal! o"
+	call setline('.', '		' . classname . '();')
+	execute "normal! o"
+	call setline('.', '		virtual ~' . classname . '();')
+	execute "normal! o"
+	execute "normal! oprivate:"
+	execute "normal! o"
+	execute "normal! o};"
+	execute "normal! k"
 endfunction
 " }}}
 " make ;std::
@@ -567,48 +540,48 @@ autocmd FileType h,cpp inoremap ;iinc #include<space><iostream><cr>
 autocmd FileType h,cpp inoremap <silent> ;mem <esc>:call MakeMember()<cr>i
 " def MakeMember {{{
 function! MakeMember()
-  call inputsave()
-  " ask the user for input
-  let type = input('Enter Type: ')
-  let name = input('Enter Name: ')
-  " TODO: add question to add it to list initializer
-  call inputrestore()
-  call setline('.', '		' . type . ' m_' . name . ';')
-  execute "normal! /\vprivate:"
-  let priv = search('private:', 'b')
-  " Create new line for getter and setter
-  execute "normal! O"
-  " create get function
-  call setline('.\', '		' . type . ' get' . name . '() const;')
-  " find matching get
-  let caseget = search('\v\ get')
-  " change case and create next line
-  execute "normal! 4l~o"
-  " create set function
-  call setline('.\', '		void set' . name . '(' . type . ');')
-  " find matching set
-  let caseset = search('\v\ set')
-  " change capitalisation
-  execute "normal! 4l~o"
-  " set cursor again to the original position
-  let findorig = search(name)
-  execute "normal! o"
+	call inputsave()
+	" ask the user for input
+	let type = input('Enter Type: ')
+	let name = input('Enter Name: ')
+	" TODO: add question to add it to list initializer
+	call inputrestore()
+	call setline('.', '		' . type . ' m_' . name . ';')
+	execute "normal! /\vprivate:"
+	let priv = search('private:', 'b')
+	" Create new line for getter and setter
+	execute "normal! O"
+	" create get function
+	call setline('.\', '		' . type . ' get' . name . '() const;')
+	" find matching get
+	let caseget = search('\v\ get')
+	" change case and create next line
+	execute "normal! 4l~o"
+	" create set function
+	call setline('.\', '		void set' . name . '(' . type . ');')
+	" find matching set
+	let caseset = search('\v\ set')
+	" change capitalisation
+	execute "normal! 4l~o"
+	" set cursor again to the original position
+	let findorig = search(name)
+	execute "normal! o"
 endfunction
 " }}}
 " make standard header ifndef with ;header
 autocmd FileType h,cpp inoremap ;header <esc>:call MakeHeader()<cr>i
 " {{{ def MakeHeader
 function! MakeHeader()
-  let filename = expand('%:t')
-  execute "normal! gg"
-  call setline('.\', filename)
-  execute "normal! gUU0f.r_I#ifndef "
-  execute "normal! o"
-  call setline('.\', filename)
-  execute "normal! gUU0f.r_I#define "
-  execute "normal! o#endif"
-  execute "normal! O"
-  execute "normal! o"
+	let filename = expand('%:t')
+	execute "normal! gg"
+	call setline('.\', filename)
+	execute "normal! gUU0f.r_I#ifndef "
+	execute "normal! o"
+	call setline('.\', filename)
+	execute "normal! gUU0f.r_I#define "
+	execute "normal! o#endif"
+	execute "normal! O"
+	execute "normal! o"
 endfunction
 " }}}
 " make ;const
@@ -625,16 +598,16 @@ autocmd FileType h,cpp inoremap ;docl /*!<cr>\class <cr><cr>\brief <++><cr><cr><
 autocmd FileType h,cpp inoremap ;dofu /*!<cr>\brief <cr><cr><++><cr><cr>\param[in] <++><cr>\param[out] <++><cr>\return <++><cr>\sa <++><cr>\note <++><cr>/<esc>9kA
 " }}}
 
-" 14. Macros {{{
+" 13. Macros {{{
 
 " }}}
 
-" 15. Abbreviations {{{
+" 14. Abbreviations {{{
 abbr teh the
 abbr PIR PIRATE
 " }}}
 
-" 16. Movement mappings {{{
+" 15. Movement mappings {{{
 " edit in next ()
 onoremap in( :<c-u>normal! f(vi(<cr>
 " edit in prev ()
@@ -649,12 +622,12 @@ onoremap in{ :<c-u>normal! f{vi{<cr>
 onoremap inl{ :<c-u>normal! F}vi{<cr>
 " }}}
 
-" {{{ 17. Haskell bindings
+" {{{ 16. Haskell bindings
 autocmd FileType haskell set expandtab
 
 " }}}
-"
-" {{{ 18. XML bindings
+
+" {{{ 17. XML bindings
 autocmd FileType xml set expandtab
 autocmd FileType xml inoremap ;co <!-- --><esc>F<space>a
 
