@@ -1,34 +1,39 @@
 -- IMPORT                                                                    {{{
 --------------------------------------------------------------------------------
 import XMonad
-import XMonad.Actions.DynamicProjects
-import XMonad.Actions.CycleWS
 
-import XMonad.Hooks.EwmhDesktops
+import XMonad.Actions.CycleWS
+import XMonad.Actions.DynamicProjects
+
 import XMonad.Hooks.DynamicLog
-import XMonad.Hooks.UrgencyHook
-import XMonad.Hooks.ManageHelpers
+import XMonad.Hooks.EwmhDesktops
 import XMonad.Hooks.ManageDocks
+import XMonad.Hooks.ManageHelpers
 import XMonad.Hooks.Minimize
 import XMonad.Hooks.Place
 import XMonad.Hooks.SetWMName
+import XMonad.Hooks.UrgencyHook
 
-import XMonad.Util.Run
 import XMonad.Util.EZConfig
 import XMonad.Util.NamedActions
+import XMonad.Util.Run
 
+import XMonad.Layout.FixedColumn
+import XMonad.Layout.LimitWindows
+import XMonad.Layout.Magnifier
 import XMonad.Layout.Minimize
 import XMonad.Layout.NoBorders
+import XMonad.Layout.PerWorkspace
 import XMonad.Layout.Renamed
-import XMonad.Layout.Tabbed
 import XMonad.Layout.Spacing
+import XMonad.Layout.Tabbed
 import XMonad.Layout.ThreeColumns
 
 import XMonad.Prompt
 
-import qualified XMonad.Layout.BoringWindows as B
 import qualified DBus as D
 import qualified DBus.Client as D
+import qualified XMonad.Layout.BoringWindows as B
 
 import System.Exit
 import Graphics.X11.ExtraTypes.XF86
@@ -101,17 +106,27 @@ myFont = "xft:SpaceMono Nerd Font Mono:" ++ "fontformat=truetype:size=10:antiali
 -----------------------------------------------------------------------------}}}
 -- LAYOUT                                                                    {{{
 --------------------------------------------------------------------------------
-myLayouts = renamed [CutWordsLeft 1] .
-    avoidStruts . minimize . B.boringWindows $
-    smartBorders
-        ( aTiled
-        ||| aFullscreen
-        ||| aThreeColMid
-        )
-  where
-    aFullscreen = renamed [Replace "Full"] $ spacing 0 $ noBorders Full
-    aTiled = renamed [Replace "Main"] $ spacing mySpacing $ Tall 1 (3/100) (1/2)
-    aThreeColMid = renamed [Replace "3Col"] $ spacing mySpacing $ ThreeColMid 1 (3/100) (1/2)
+myLayouts = renamed [CutWordsLeft 1] . avoidStruts . minimize . B.boringWindows $ perWS
+
+-- layout per workspace
+perWS = onWorkspace wsGEN myFT  $
+        onWorkspace wsWRK myFTM $
+        onWorkspace wsSYS myFTM $
+        onWorkspace wsMED my3FT $
+        onWorkspace wsTMP myFTM $
+        onWorkspace wsGAM myFT  $
+        myAll -- all layouts for all other workspaces
+
+
+myFT  = myTile ||| myFull
+myFTM = myTile ||| myFull ||| myMagn
+my3FT = myTile ||| myFull ||| my3cmi
+myAll = myTile ||| myFull ||| my3cmi ||| myMagn
+
+myFull = renamed [Replace "Full"] $ spacing 0 $ noBorders Full
+myTile = renamed [Replace "Main"] $ spacing mySpacing $ Tall 1 (3/100) (1/2)
+my3cmi = renamed [Replace "3Col"] $ spacing mySpacing $ ThreeColMid 1 (3/100) (1/2)
+myMagn = renamed [Replace "Mag"]  $ noBorders $ limitWindows 3 $ magnifiercz' 1.4 $ FixedColumn 1 20 80 10
 
 -----------------------------------------------------------------------------}}}
 -- THEMES                                                                    {{{
