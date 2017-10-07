@@ -67,6 +67,9 @@ source /usr/share/vim/vimfiles/plugin/youcompleteme.vim
 " Comment plugin
 Plugin 'tpope/vim-commentary'
 
+" Vim Tmux integration
+Plugin 'christoomey/vim-tmux-navigator'
+
 " pdf viewer
 Plugin 'xuhdev/vim-latex-live-preview'
 
@@ -319,8 +322,8 @@ inoremap <c-l> <c-x><c-l>
 " toggle line numbers relative or absolute
 nnoremap <C-n> :call NumberToggle()<cr>
 " clang-format
-nnoremap <C-K> :pyf /usr/share/clang/clang-format.py<cr>
-vnoremap <C-K> :pyf /usr/share/clang/clang-format.py<cr>
+" nnoremap <C-K> :pyf /usr/share/clang/clang-format.py<cr>
+" vnoremap <C-K> :pyf /usr/share/clang/clang-format.py<cr>
 
 " }}}
 
@@ -340,11 +343,6 @@ nnoremap <leader>" viw<esc>a"<esc>hbi"<esc>lel
 nnoremap <leader>' viw<esc>a'<esc>hbi'<esc>lel
 "insert a space from normal mode
 nnoremap <leader><space> i<space><esc>
-" move across windows without having to press c-w
-nnoremap <leader>h <c-w>h
-nnoremap <leader>j <c-w>j
-nnoremap <leader>k <c-w>k
-nnoremap <leader>l <c-w>l
 " open file also in a new tab (editing a file in two places) (split)
 nnoremap <leader>v <c-w>v
 " write a file in two key strokes
@@ -370,7 +368,7 @@ nnoremap <silent> <leader>t :TagbarToggle<cr>
 " }}}
 
 " Double character {{{
-" do not use: ' " a b fF h i j k l t v wW z 0 1 2 3 4 5 6
+" do not use: ' " a b fF  i t v wW z
 " edit vimrc
 nnoremap <silent> <leader>ev :vsplit ~/dotfiles/globalvim.vim<cr>
 nnoremap <silent> <leader>sv :source $MYVIMRC<cr>
