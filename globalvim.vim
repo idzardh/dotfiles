@@ -1,7 +1,6 @@
 " .vimrc
 " Author: Idzard Hoekstra
 " only use <leader><space> in inoremap and no other leader commands!!
-
 " 1. Preamble {{{
 filetype off
 set nocompatible
@@ -11,7 +10,6 @@ call vundle#begin()
 Plugin 'VundleVim/Vundle.vim'
 " Do not remove any of the above!!
 " }}}
-
 " 2. Vim Plugins {{{
 " Fancy statusbar + themes
 Plugin 'vim-airline/vim-airline'
@@ -70,8 +68,11 @@ Plugin 'tpope/vim-commentary'
 " Vim Tmux integration
 Plugin 'christoomey/vim-tmux-navigator'
 
-" pdf viewer
+" pdf viewer for latex
 Plugin 'xuhdev/vim-latex-live-preview'
+
+" personal wiki
+Plugin 'vimwiki/vimwiki'
 
 " fancy icons
 Plugin 'ryanoasis/vim-devicons'
@@ -81,7 +82,6 @@ call vundle#end()
 filetype plugin indent on
 " do not change the above two lines!
 " }}}
-
 " 3. Plugin Settings {{{
 " Airline settings {{{
 let g:airline_theme='nord'
@@ -95,7 +95,6 @@ set ttimeoutlen=10
 set laststatus=2
 set noshowmode
 " }}}
-
 " NERDTree settings {{{
 " autocmd StdinReadPre * let s:std_in=1
 " autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
@@ -135,20 +134,16 @@ let g:NERDTreeExtensionHighlightColor['pdf'] = s:darkOrange
 " let nerdtree use netrw
 let NERDTreeHijackNetrw=1
 " }}}
-
 " vim-projectionist {{{
 
 " }}}
-
 " GitGutter settings {{{
 let g:gitgutter_map_keys = 0
 " }}}
-
 " syntastic settings {{{
 let g:syntastic_cpp_compiler = 'g++'
 let g:syntastic_cpp_compiler_options = '-std=c++17 -Wall -Wextra -Wunused'
 " }}}
-
 " youcompleteme {{{
 let g:ycm_python_binary_path    = '/usr/bin/python2'
 let g:ycm_server_python_interpreter = '/usr/bin/python2'
@@ -156,7 +151,6 @@ let g:ycm_global_ycm_extra_conf = '/usr/share/vim/vimfiles/third_party/ycmd/cpp/
 let g:ycm_confirm_extra_conf = 0
 let g:ycm_extra_conf_globlist = ['~/dev/*','!~/*']
 " }}}
-
 " rainbow parentheses {{{
 let g:rbpt_colorpairs = [
 		\ ['brown',       'RoyalBlue3'],
@@ -187,13 +181,13 @@ au Syntax * RainbowParenthesesLoadSquare
 au Syntax * RainbowParenthesesLoadChevrons
 
 " }}}
-
 " latex preview {{{
 let g:livepreview_previewer = 'evince'
 " }}}
-
+" vim wiki {{{
+let g:livepreview_previewer = 'evince'
+" }}}
 "}}}
-
 " 4. Vim Settings {{{
 set nowrap
 set linebreak
@@ -205,19 +199,13 @@ set ignorecase
 set smartcase
 set lazyredraw
 set encoding=utf-8
-" set textwidth=80
-" set list
 set listchars=trail:ᚲ,eol:¬,extends:⟩,precedes:⟨,tab:►\ 
 set t_Co=256
 set splitright
 set splitbelow
 set shell=/bin/zsh
-
 set foldlevelstart=0
 set foldmethod=marker
-
-" ctags optimization
-"set autochdir
 set tags=tags;
 
 " language
@@ -226,43 +214,13 @@ set spelllang=en_gb
 " cpp include path (ros)
 set path+=../include/
 
-" cpp folds
-"augroup ft_cpp
-"  au!
-"  au FileType cpp setlocal foldmethod=syntax
-"  au FileType cpp setlocal ts=4 sts=4 sw=4 noexpandtab
-"  au FileType cpp setlocal foldlevelstart=3
-"augroup END
-
-" c folds
-"augroup ft_c
-"  au!
-"  au FileType c setlocal foldmethod=syntax
-"  au FileType c setlocal ts=4 sts=4 sw=4 noexpandtab
-"  au FileType c setlocal foldlevelstart=3
-"augroup END
-
-" h folds
-"augroup ft_h
-"  au!
-"  au FileType h setlocal foldmethod=syntax
-"  au FileType h setlocal ts=4 sts=4 sw=4 noexpandtab
-"  au FileType h setlocal foldlevelstart=3
-"augroup END
-
 colorscheme slate
-"desert
-
 hi Normal ctermbg=NONE
-
 let g:tex_flavor = 'tex'
-
 set wildmenu
 set wildignore=*.o,*.obj,*.bak,*.exe,*.hi,*.dyn_hi,*.dyn_o,*.txt,*.zip,*.pdf
 " }}}
-
 " 5. Key remappings {{{
-
 " when searching focus in middle of screen
 nnoremap n nzzzv
 nnoremap N Nzzzv
@@ -292,7 +250,6 @@ inoremap <down>  5<c-w>-
 inoremap <left>  5<c-w><
 inoremap <right> 5<c-w>>
 " }}}
-
 " 6. F Key Mappings {{{
 
 " F1 = help
@@ -312,7 +269,6 @@ nnoremap <F10> :shell<cr>
 " F11
 " F12
 " }}}
-
 " 7. Ctrl Mappings {{{
 
 "insert mode completion
@@ -326,16 +282,13 @@ nnoremap <C-n> :call NumberToggle()<cr>
 " vnoremap <C-K> :pyf /usr/share/clang/clang-format.py<cr>
 
 " }}}
-
 " 8. Ex Mappings {{{
 " enable sudo write if forgotten
 cnoremap w!! w !sudo tee > /dev/null %
 
 "}}}
-
 " 9. Leader Commands {{{
 let mapleader="\<space>"
-
 " Single character {{{
 " do not use: e s
 " surround a word with either single or double quotes
@@ -348,7 +301,7 @@ nnoremap <leader>v <c-w>v
 " write a file in two key strokes
 nnoremap <leader>w :w<cr>
 " execute a mkreport in the folder
-nnoremap <leader>b :w <bar> make<cr><cr><cr>
+nnoremap <silent> <leader>b :browse oldfiles<cr>
 " use 0 to go first non-blank character and <leader>0 to go to start of line
 nnoremap 0 ^
 nnoremap <leader>0 0
@@ -366,7 +319,6 @@ nnoremap <silent> <leader>F :vsp .<cr>
 " open tagbar
 nnoremap <silent> <leader>t :TagbarToggle<cr>
 " }}}
-
 " Double character {{{
 " do not use: ' " a b fF  i t v wW z
 " edit vimrc
@@ -387,7 +339,6 @@ nnoremap <leader>sl :source ~/.vim/sessions/
 nnoremap <leader>ss :setlocal spell!<cr>
 " }}}
 " }}}
-
 " 10. Line Settings {{{
 set number         "show line numbers
 set relativenumber "show linenumbers relative to current line
@@ -419,7 +370,6 @@ highlight ColorColumn ctermbg=darkgrey
 call matchadd('ColorColumn','\%82v', 100)
 
 " }}}
-
 " 11. Latex bindings {{{
 " find next <++> for custom Latex editing and enable spell check
 autocmd FileType tex,plaintex inoremap <leader><space> <esc>/<++><cr>"_c4l
@@ -491,7 +441,6 @@ autocmd FileType tex,plaintex inoremap ;co \begin{column}{.5\textwidth}<cr><cr>\
 autocmd FileType tex,plaintex inoremap ;ros \ac{ROS}
 " }}}
 " }}}
-
 " 12. Cpp bindings {{{
 " find next <++> for custom cpp editing
 autocmd FileType h,cpp inoremap <leader><space> <esc>/<++><cr>"_c4l
@@ -595,16 +544,13 @@ autocmd FileType h,cpp inoremap ;dofi /*!<cr>\file <cr><cr>\author <++><cr>\date
 autocmd FileType h,cpp inoremap ;docl /*!<cr>\class <cr><cr>\brief <++><cr><cr><++><cr><cr>\author <++><cr>\date <++><cr>/<esc>8kA
 autocmd FileType h,cpp inoremap ;dofu /*!<cr>\brief <cr><cr><++><cr><cr>\param[in] <++><cr>\param[out] <++><cr>\return <++><cr>\sa <++><cr>\note <++><cr>/<esc>9kA
 " }}}
-
 " 13. Macros {{{
 
 " }}}
-
 " 14. Abbreviations {{{
 abbr teh the
 abbr PIR PIRATE
 " }}}
-
 " 15. Movement mappings {{{
 " edit in next ()
 onoremap in( :<c-u>normal! f(vi(<cr>
@@ -619,12 +565,10 @@ onoremap in{ :<c-u>normal! f{vi{<cr>
 " edit in prev ()
 onoremap inl{ :<c-u>normal! F}vi{<cr>
 " }}}
-
 " {{{ 16. Haskell bindings
 autocmd FileType haskell set expandtab
 
 " }}}
-
 " {{{ 17. XML bindings
 autocmd FileType xml set expandtab
 autocmd FileType xml inoremap ;co <!-- --><esc>F<space>a
