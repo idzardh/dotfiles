@@ -109,8 +109,8 @@ myFont = "xft:SpaceMono Nerd Font Mono:" ++ "fontformat=truetype:size=10:antiali
 myLayouts = renamed [CutWordsLeft 1] . avoidStruts . minimize . B.boringWindows $ perWS
 
 -- layout per workspace
-perWS = onWorkspace wsGEN myFT  $
-        onWorkspace wsWRK myFTM $
+perWS = onWorkspace wsGEN my3FT $
+        onWorkspace wsWRK myAll $
         onWorkspace wsSYS myFTM $
         onWorkspace wsMED my3FT $
         onWorkspace wsTMP myFTM $
