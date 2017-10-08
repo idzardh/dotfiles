@@ -185,7 +185,9 @@ au Syntax * RainbowParenthesesLoadChevrons
 let g:livepreview_previewer = 'evince'
 " }}}
 " vim wiki {{{
-let g:livepreview_previewer = 'evince'
+let g:vimwiki_list = [{'path': '~/Dropbox/my_wiki/', 'path_html': '~/Dropbox/my_wiki/HTML', 'syntax': 'markdown'}]
+let g:vimwiki_folding = 'list'
+autocmd FileType vimwiki setlocal spell
 " }}}
 "}}}
 " 4. Vim Settings {{{
@@ -298,8 +300,6 @@ nnoremap <leader>' viw<esc>a'<esc>hbi'<esc>lel
 nnoremap <leader><space> i<space><esc>
 " open file also in a new tab (editing a file in two places) (split)
 nnoremap <leader>v <c-w>v
-" write a file in two key strokes
-nnoremap <leader>w :w<cr>
 " execute a mkreport in the folder
 nnoremap <silent> <leader>b :browse oldfiles<cr>
 " use 0 to go first non-blank character and <leader>0 to go to start of line
@@ -321,6 +321,8 @@ nnoremap <silent> <leader>t :TagbarToggle<cr>
 " }}}
 " Double character {{{
 " do not use: ' " a b fF  i t v wW z
+" write a file in two key strokes
+nnoremap <leader>wf :w<cr>
 " edit vimrc
 nnoremap <silent> <leader>ev :vsplit ~/dotfiles/globalvim.vim<cr>
 nnoremap <silent> <leader>sv :source $MYVIMRC<cr>

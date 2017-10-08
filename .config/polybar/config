@@ -3,6 +3,7 @@
 background = #d0303030
 background-transparent = #00303030
 background-alt = #c0303030
+background-alt-2 = #ff5fafcf
 foreground = #eeeeee
 foreground-alt = #c1c2c3
 
@@ -38,7 +39,7 @@ height = 28
 offset-x = 0
 offset-y = 0
 
-background = ${colors.background-transparent}
+background = ${colors.background-alt}
 foreground = ${colors.foreground}
 
 overline-size = 0

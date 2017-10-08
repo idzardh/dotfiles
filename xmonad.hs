@@ -213,7 +213,7 @@ myAdditionalKeys c = (subtitle "Custom Keys":) $ mkNamedKeymap c $
   myProgramKeys ++ myWindowManagerKeys ++ myMediaKeys
 
 myProgramKeys =
-  [ ("M-z"        , addName "Open calendar & todo list" $ spawn "tilix -e calcurse")
+  [ ("M-z"        , addName "Open calendar & todo list" $ spawn "tilix -e vim ~/Dropbox/my_wiki/index.wiki")
   , ("M-S-z"      , addName "Lock computer" $ spawn "~/dotfiles/scripts/lockscreen.sh")
   , ("M-s"        , addName "Open Steam" $ spawn "steam")
   , ("M-S-s"      , addName "Sleep" $ spawn "systemctl suspend")
