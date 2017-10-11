@@ -68,15 +68,17 @@ main = do
 -- GLOBAL VARIABLES                                                          {{{
 --------------------------------------------------------------------------------
 -- General config
-myTerminal    = "tilix"
-myModMask     = mod4Mask
-myBorderWidth = 1
-myBrowser     = "firefox"
+myTerminal     = "tilix"
+myModMask      = mod4Mask
+myBorderWidth  = 1
+myBrowser      = "firefox"
 mySpacing :: Int
-mySpacing     = 5
+mySpacing      = 5
+myLargeSpacing :: Int
+myLargeSpacing = 30
 noSpacing :: Int
-noSpacing     = 0
-prompt        = 20
+noSpacing      = 0
+prompt         = 20
 
 -- Colours
 fg        = "#ebdbb2"
@@ -191,8 +193,7 @@ projects =
             }
   , Project { projectName      = "system"
             , projectDirectory = "~/Documents/"
-            , projectStartHook = Just $ do spawn "tilix -e calcurse"
-                                           spawn "tilix -e ncmpcpp"
+            , projectStartHook = Just $ do spawn "tilix -e ncmpcpp"
                                            spawn "tilix -e ncmpcpp"
                                            spawn "tilix -e htop"
             }
@@ -227,6 +228,7 @@ myWindowManagerKeys =
   , ("M-S-b"      , addName "Increase spacing between windows" $ incSpacing mySpacing)
   , ("M-v"        , addName "Set default spacing between windows" $ setSpacing mySpacing)
   , ("M-S-v"      , addName "Decrease spacing between windows" $ incSpacing (-mySpacing))
+  , ("M-c"        , addName "Set to default large spacing between windows" $ setSpacing myLargeSpacing)
   , ("M-u"        , addName "Switch view to project" $ switchProjectPrompt warmPromptTheme)
   , ("M-S-u"      , addName "Send current window to project" $ shiftToProjectPrompt coldPromptTheme)
   , ("M-S-h"      , addName "Move to previous non empty workspace" $ moveTo Prev NonEmptyWS)

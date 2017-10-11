@@ -86,7 +86,7 @@ monitor-fallback = ${env:MONITOR:HDMI1}
 
 modules-left = xmonad
 modules-center = mpd volume
-modules-right = updates battery backlight date powermenu
+modules-right = redshift updates battery backlight date powermenu
 
 [module/xmonad]
 type = custom/script
@@ -134,6 +134,12 @@ format-prefix-foreground = ${colors.blue_arch}
 format-underline = ${colors.grey}
 
 interval = 120
+
+[module/redshift]
+type = custom/script
+interval = 5
+
+exec = ~/.config/polybar/redshift.sh
 
 [module/battery]
 type = internal/battery

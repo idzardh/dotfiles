@@ -186,8 +186,6 @@ let g:livepreview_previewer = 'evince'
 " }}}
 " vim wiki {{{
 let g:vimwiki_list = [{'path': '~/Dropbox/my_wiki/', 'path_html': '~/Dropbox/my_wiki/HTML', 'syntax': 'markdown'}]
-let g:vimwiki_folding = 'list'
-autocmd FileType vimwiki setlocal spell
 " }}}
 "}}}
 " 4. Vim Settings {{{
