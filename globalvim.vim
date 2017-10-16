@@ -11,72 +11,55 @@ Plugin 'VundleVim/Vundle.vim'
 " Do not remove any of the above!!
 " }}}
 " 2. Vim Plugins {{{
-" Fancy statusbar + themes
+" Fancy statusbar + themes {{{
 Plugin 'vim-airline/vim-airline'
 Plugin 'vim-airline/vim-airline-themes'
-
 " Nord theme
 Plugin 'arcticicestudio/nord-vim'
-
-" Show matching parentheses
-Plugin 'kien/rainbow_parentheses.vim'
-
-" File tree sidebar
+" }}}
+" File tree exploration with git and highlighting enabled {{{
 Plugin 'scrooloose/nerdtree'
 Plugin 'Xuyuanp/nerdtree-git-plugin'
 Plugin 'tiagofumo/vim-nerdtree-syntax-highlight'
-
-" git show additions compared to staged
+" }}}
+" Git helpers and plugins {{{
 Plugin 'airblade/vim-gitgutter'
-
 " Git plugin
 Plugin 'tpope/vim-fugitive'
-
+" }}}
+" Tpope helpers for projects and editing {{{
 " vim projectionist
 Plugin 'tpope/vim-projectionist'
-
-" Zeal browser
-Plugin 'KabbAmine/zeavim.vim'
-
-" Ctags sidebar
-Plugin 'majutsushi/tagbar'
-
-" closing brackets
-Plugin 'cohama/lexima.vim'
-
 " Surround with ' " or (
 Plugin 'tpope/vim-surround'
-
 " Repeat
 Plugin 'tpope/vim-repeat'
-
 " extra mappings?
 Plugin 'tpope/vim-unimpaired'
-
-" Fuzzy finder
-Plugin 'ctrlpvim/ctrlp.vim'
-
-" Syntax checking
+" closing brackets
+Plugin 'cohama/lexima.vim'
+" }}}
+" Documentation and tags {{{
+Plugin 'KabbAmine/zeavim.vim'
+" Ctags sidebar
+Plugin 'majutsushi/tagbar'
+" }}}
+" Syntax checking {{{
 Plugin 'scrooloose/syntastic'
-
 " Cpp completion
 source /usr/share/vim/vimfiles/plugin/youcompleteme.vim
-
 " Comment plugin
 Plugin 'tpope/vim-commentary'
-
-" Vim Tmux integration
+" }}}
+" Other {{{
 Plugin 'christoomey/vim-tmux-navigator'
-
 " pdf viewer for latex
 Plugin 'xuhdev/vim-latex-live-preview'
-
 " personal wiki
 Plugin 'vimwiki/vimwiki'
-
 " fancy icons
 Plugin 'ryanoasis/vim-devicons'
-
+" }}}
 " All of your Plugins must be added before the following line
 call vundle#end()
 filetype plugin indent on
@@ -151,36 +134,6 @@ let g:ycm_global_ycm_extra_conf = '/usr/share/vim/vimfiles/third_party/ycmd/cpp/
 let g:ycm_confirm_extra_conf = 0
 let g:ycm_extra_conf_globlist = ['~/dev/*','!~/*']
 " }}}
-" rainbow parentheses {{{
-let g:rbpt_colorpairs = [
-		\ ['brown',       'RoyalBlue3'],
-		\ ['Darkblue',    'SeaGreen3'],
-		\ ['darkgreen',   'firebrick3'],
-		\ ['darkcyan',    'RoyalBlue3'],
-		\ ['darkred',     'SeaGreen3'],
-		\ ['darkmagenta', 'DarkOrchid3'],
-		\ ['gray',        'RoyalBlue3'],
-		\ ['darkred',     'DarkOrchid3'],
-		\ ['black',       'SeaGreen3'],
-		\ ['red',         'firebrick3'],
-		\ ['darkmagenta', 'DarkOrchid3'],
-		\ ['darkgray',    'DarkOrchid3'],
-		\ ['Darkblue',    'firebrick3'],
-		\ ['brown',       'firebrick3'],
-		\ ['darkgreen',   'RoyalBlue3'],
-		\ ['darkcyan',    'SeaGreen3'],
-		\ ]
-
-let g:rbpt_max = 16
-let g:rbpt_loadcmd_toggle = 0
-
-au VimEnter * RainbowParenthesesToggle
-au Syntax * RainbowParenthesesLoadBraces
-au Syntax * RainbowParenthesesLoadRound
-au Syntax * RainbowParenthesesLoadSquare
-au Syntax * RainbowParenthesesLoadChevrons
-
-" }}}
 " latex preview {{{
 let g:livepreview_previewer = 'evince'
 " }}}
@@ -218,7 +171,11 @@ colorscheme slate
 hi Normal ctermbg=NONE
 let g:tex_flavor = 'tex'
 set wildmenu
-set wildignore=*.o,*.obj,*.bak,*.exe,*.hi,*.dyn_hi,*.dyn_o,*.txt,*.zip,*.pdf
+set wildignore=*.o,*.obj,*.bak,*.exe,*.hi,*.dyn_hi,*.dyn_o,*.zip,*.pdf
+set wildcharm=<C-z>
+set wildmode=longest,full
+set wildignorecase
+
 " }}}
 " 5. Key remappings {{{
 " when searching focus in middle of screen
@@ -232,12 +189,16 @@ nnoremap g, g,zz
 " simple reformating of a paragraph (e.g. in latex)
 nnoremap Q gqip
 
-" tab = 2 spaces
-" set expandtab     "turn tab into spaces
+" list buffers and enable easy switching
+nnoremap gb :ls<cr>:b<space>
 
 set tabstop=2     "display tab as 2 spaces
 set shiftwidth=2  "insert two spaces for tab
 set softtabstop=2 "insert two spaces for tab
+
+" use pageup and pagedown for something useful
+nnoremap <PageUp>   :bprevious<cr>
+nnoremap <PageDown> :bnext<cr>
 
 " disable arrow keys and assign to resizing
 nnoremap <up>    5<c-w>+
@@ -298,8 +259,9 @@ nnoremap <leader>' viw<esc>a'<esc>hbi'<esc>lel
 nnoremap <leader><space> i<space><esc>
 " open file also in a new tab (editing a file in two places) (split)
 nnoremap <leader>v <c-w>v
-" execute a mkreport in the folder
-nnoremap <silent> <leader>b :browse oldfiles<cr>
+" Open buffer list more easily
+nnoremap <silent> <leader>b :buffer <C-z><S-Tab>
+nnoremap <silent> <leader>B :sbuffer <C-z><S-Tab>
 " use 0 to go first non-blank character and <leader>0 to go to start of line
 nnoremap 0 ^
 nnoremap <leader>0 0
@@ -310,9 +272,9 @@ nnoremap <leader>a za
 nnoremap <leader>A zMzvzz
 " toggle invisible characters
 nnoremap <silent> <leader>i :set list!<cr>
-" toggle NERDTree
+" open nerdtree in this window
 nnoremap <silent> <leader>f :e .<cr>
-" find current file in NERDTree
+" open nerdtree in vsp
 nnoremap <silent> <leader>F :vsp .<cr>
 " open tagbar
 nnoremap <silent> <leader>t :TagbarToggle<cr>
