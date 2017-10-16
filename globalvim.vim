@@ -18,9 +18,6 @@ Plugin 'vim-airline/vim-airline-themes'
 " Nord theme
 Plugin 'arcticicestudio/nord-vim'
 
-" Show matching parentheses
-Plugin 'kien/rainbow_parentheses.vim'
-
 " File tree sidebar
 Plugin 'scrooloose/nerdtree'
 Plugin 'Xuyuanp/nerdtree-git-plugin'
@@ -150,36 +147,6 @@ let g:ycm_server_python_interpreter = '/usr/bin/python2'
 let g:ycm_global_ycm_extra_conf = '/usr/share/vim/vimfiles/third_party/ycmd/cpp/ycm/.ycm_extra_conf.py'
 let g:ycm_confirm_extra_conf = 0
 let g:ycm_extra_conf_globlist = ['~/dev/*','!~/*']
-" }}}
-" rainbow parentheses {{{
-let g:rbpt_colorpairs = [
-		\ ['brown',       'RoyalBlue3'],
-		\ ['Darkblue',    'SeaGreen3'],
-		\ ['darkgreen',   'firebrick3'],
-		\ ['darkcyan',    'RoyalBlue3'],
-		\ ['darkred',     'SeaGreen3'],
-		\ ['darkmagenta', 'DarkOrchid3'],
-		\ ['gray',        'RoyalBlue3'],
-		\ ['darkred',     'DarkOrchid3'],
-		\ ['black',       'SeaGreen3'],
-		\ ['red',         'firebrick3'],
-		\ ['darkmagenta', 'DarkOrchid3'],
-		\ ['darkgray',    'DarkOrchid3'],
-		\ ['Darkblue',    'firebrick3'],
-		\ ['brown',       'firebrick3'],
-		\ ['darkgreen',   'RoyalBlue3'],
-		\ ['darkcyan',    'SeaGreen3'],
-		\ ]
-
-let g:rbpt_max = 16
-let g:rbpt_loadcmd_toggle = 0
-
-au VimEnter * RainbowParenthesesToggle
-au Syntax * RainbowParenthesesLoadBraces
-au Syntax * RainbowParenthesesLoadRound
-au Syntax * RainbowParenthesesLoadSquare
-au Syntax * RainbowParenthesesLoadChevrons
-
 " }}}
 " latex preview {{{
 let g:livepreview_previewer = 'evince'
