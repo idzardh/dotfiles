@@ -136,6 +136,7 @@ let g:ycm_extra_conf_globlist = ['~/dev/*','!~/*']
 " }}}
 " latex preview {{{
 let g:livepreview_previewer = 'evince'
+let g:livepreview_engine = 'xelatex'
 " }}}
 " vim wiki {{{
 let g:vimwiki_list = [{'path': '~/Dropbox/my_wiki/', 'path_html': '~/Dropbox/my_wiki/HTML', 'syntax': 'markdown'}]
