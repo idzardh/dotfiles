@@ -219,6 +219,7 @@ myProgramKeys =
   , ("M-s"        , addName "Open Steam" $ spawn "steam")
   , ("M-S-s"      , addName "Sleep" $ spawn "systemctl suspend")
   , ("M-f"        , addName "Open firefox" $ spawn myBrowser)
+  , ("M-S-f"      , addName "Open chromium" $ spawn "chromium")
   , ("M-g"        , addName "Open terminal" $ spawn myTerminal)
   , ("M-S-g"      , addName "Open notes for final assignment" $ spawn "tilix -e vim ~/Documents/studie/master/afstudeeropdracht/notes/general.md")
   ]
@@ -249,6 +250,10 @@ myMediaKeys =
   -- volume: for if meta keys are not available
   , ("C-S-="                   , addName "Raise volume" $ spawn "pactl set-sink-volume 1 +5%")
   , ("C-S--"                   , addName "Lower volume" $ spawn "pactl set-sink-volume 1 -5%")
+  -- media keys if meta keys are not available
+  , ("C-S-,"                   , addName "Previous track" $ spawn "mpc prev")
+  , ("C-S-."                   , addName "Next track" $ spawn "mpc next")
+  , ("C-S-/"                   , addName "Toggle play/pause" $ spawn "mpc toggle")
   ]
 
 -----------------------------------------------------------------------------}}}
